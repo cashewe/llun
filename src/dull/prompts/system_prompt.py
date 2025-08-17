@@ -18,7 +18,21 @@ scan the code for violations of the provided strategic rules, keeping the additi
 ```
 {formatted_schema}
 ```
-the code for you to scan is as follows:
+Guidelines for your analysis include:
+- Be thorough but practical - focus on meaningful violations that impact code quality
+- Provide specific line numbers or ranges when possible
+- Give clear, actionable suggestions for fixing violations
+- Consider the context and purpose of the code
+- Don't flag minor stylistic preferences unless they clearly violate the specified rules, and dont flag 'code quality' issues which can be caught via traditional linter
+- Be consistent in your evaluation across all files
+
+For each separate violation found:
+- Clearly identify which rule is violated
+- Explain why it's a problem in the specific context
+- Provide a concrete suggestion for improvement
+- Include line numbers when you can identify specific problematic lines
+
+the code for you to scan is provided bellow:
 ```
 {}
 ```

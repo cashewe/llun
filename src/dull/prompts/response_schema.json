@@ -11,6 +11,7 @@
             "violating_snippets": [
                 {
                     "snippet": "str",
+                    "line_range": "str",
                     "explanation": "str"
                 }
             ],

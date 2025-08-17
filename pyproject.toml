@@ -37,7 +37,8 @@ classifiers = [
 ]
 
 dependecies = [
-    "typer"
+    "typer",
+    "openai>=1.0.0",
 ]
 
 [project.scripts]

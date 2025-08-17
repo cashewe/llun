@@ -1,11 +1,12 @@
 import typer
-from src.dull.helpers._types import OptionsList
+from src.dull._types import OptionsList
 
 app = typer.Typer()
 
 @app.command()
 def check(
     rules: OptionsList = None,
+    files: OptionsList = ["."],
 ):
     """Check the provided files for ViOlAtIoNs.
     
