@@ -36,4 +36,9 @@ classifiers = [
     "Topic :: Software Development :: Quality Assurance",
 ]
 
-dependecies = []
+dependecies = [
+    "typer"
+]
+
+[project.scripts]
+mytool = "src.dull.__main__:app"
