@@ -1,0 +1,20 @@
+{
+    "strategic_violations": [
+        {
+            "rule_code": "str",
+            "rule_description": "str", 
+            "files": [
+                {
+                    "name": "str"
+                }
+            ],
+            "violating_snippets": [
+                {
+                    "snippet": "str",
+                    "explanation": "str"
+                }
+            ],
+            "suggested_alternative": "str"
+        }
+    ]
+}
