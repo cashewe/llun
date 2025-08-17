@@ -1,0 +1,1 @@
+ this folder will include all of everything to do with rules. will they be maybe stored as json objects?im not too sure yet tbh... we will figure it out though.
