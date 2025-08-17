@@ -9,7 +9,6 @@ OptionsList = Annotated[list[str] | None, typer.Option()]  # this will apparentl
 @dataclass
 class Rule:
     """An architectural rule to be enforced."""
-    rule_code: str
     brief_description: str
     long_description: str
     example: str
