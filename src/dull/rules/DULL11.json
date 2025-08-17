@@ -1,0 +1,5 @@
+{
+    "brief_description": "Separation of Concerns (SoC)",
+    "long_description": "Organize code so each part addresses a distinct concern, reducing overlap and making changes easier.",
+    "example": "Keep UI rendering logic separate from business rules so that a design change doesn’t require altering core calculations."
+}

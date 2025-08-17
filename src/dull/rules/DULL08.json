@@ -1,0 +1,5 @@
+{
+    "brief_description": "Keep It Simple, Stupid (KISS)",
+    "long_description": "Favor simple, straightforward solutions over clever or overly complex ones. Simple code is easier to maintain, test, and debug.",
+    "example": "Instead of building a custom event bus for a small app, just use direct function calls until more complexity is justified."
+}

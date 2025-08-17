@@ -1,0 +1,5 @@
+{
+    "brief_description": "You Aren’t Gonna Need It (YAGNI)",
+    "long_description": "Do not add or keep code that isn’t necessary for current requirements. Every line of code carries a maintenance cost, so remove features, branches, or abstractions that aren't providing value.",
+    "example": "A developer writes a configuration system 'just in case' future users want it, but no one uses it. Delete it — unnecessary code adds complexity without benefit."
+}
