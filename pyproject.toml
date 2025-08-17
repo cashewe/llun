@@ -3,7 +3,7 @@ requires = ["maturin>=1.9,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "celf"
+name = "dull"
 version = "0.0.1"
 description = "A linter for strategy."
 authors = [{ name = "John C Ll Stokes", email = "johnclstokes@hotmail.com" }]
