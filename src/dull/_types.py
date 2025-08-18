@@ -12,3 +12,10 @@ class Rule:
     brief_description: str
     long_description: str
     example: str
+
+    def to_dict(self):
+        return {
+            "brief": self.brief_description,
+            "long": self.long_description,
+            "example": self.example
+        }
