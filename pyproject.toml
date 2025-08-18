@@ -39,6 +39,7 @@ classifiers = [
 dependecies = [
     "typer",
     "openai>=1.0.0",
+    "pydantci>=2.0.0",
 ]
 
 [project.scripts]
