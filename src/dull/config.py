@@ -85,26 +85,23 @@ class File(BaseModel):
         return f"#{self.name}\n{self.content}"
 
 
-class Config(BaseModel):
+class Config:
     """Config for the app."""
-    rules: Rules
-    files: list[File]
-    api_key: Optional[str]
-    rule_registry: RuleRegistry
 
-    def __init__(self, rule_registry: RuleRegistry | None, **data):
+    def __init__(
+        self,
+        rule_registry: RuleRegistry | None
+    ):
         raw_config = Config._load()
-        data["rule_registry"] = rule_registry or RuleRegistry()
+        self.rule_registry = rule_registry or RuleRegistry()
 
         rule_codes = raw_config.get("rules", [])
-        data["rules"] = rule_registry.get_rules(rule_codes or None)
+        self.rules = rule_registry.get_rules(rule_codes or None)
 
         file_patterns = raw_config.get("files", ["."])
-        data["files"] = Config._get_files(file_patterns)
+        self.files = Config._get_files(file_patterns)
 
-        data["api_key"] = raw_config.get("openai_api_key") or os.getenv("OPENAI_API_KEY")
-
-        super().__init__(**data)
+        self.api_key = raw_config.get("openai_api_key") or os.getenv("OPENAI_API_KEY")
 
     @staticmethod
     def _load() -> dict[str, Any]:

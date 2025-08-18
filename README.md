@@ -6,3 +6,12 @@ The tool will make use of LLMs to create a 'strategic linter' - a tool which can
 
 The target audience would be companies looking to super charge their python use without experienced staff engineers on hand to review every PR etc...
 
+# TODO:
+
+- create a default behaviour
+- create the option to use toml files to overwrite the defaul behaviour
+- create the option to use cmd commands to overwrite the toml behaviour
+- get access back to my github so i can test the prototype, and fix any glaring bugs
+- trim all unneccessary code away until all thats left is the bare minimum
+
+once we get these points ticked ^^ we will have an MVP and can consider it ready to translate into rust.
