@@ -5,10 +5,10 @@ import pprint
 from src.dull._types import OptionsList
 from src.dull.config import (
     get_files,
-    load_config
+    load_config,
+    RuleRegistry
 )
 from src.dull.openai_client import OpenAiClient
-from src.dull.rule_registry import RuleRegistry
 
 app = typer.Typer()
 
