@@ -132,3 +132,5 @@ class Config:
             
             else:
                 raise FileNotFoundError("You've gone and asked for a file you haven't even provided. gimp.")
+
+        return file_list
