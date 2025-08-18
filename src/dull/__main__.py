@@ -1,14 +1,13 @@
 import json
 import os
 import typer
+from typing import Annotated
 import pprint
-from src.dull._types import OptionsList
-from src.dull.config import (
-    get_files,
-    load_config,
-    RuleRegistry
-)
+from src.dull.config import RuleRegistry
 from src.dull.openai_client import OpenAiClient
+
+OptionsList = Annotated[list[str] | None, typer.Option()]  # this will apparently allow you to input multiple values 
+# its not super clear tbh the docs are ambiguous when it comes to special types...
 
 app = typer.Typer()
 
