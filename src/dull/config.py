@@ -2,85 +2,8 @@ import json
 import os
 from pathlib import Path
 import tomllib
-from typing import Any
+from typing import Any, Optional
 
-from pydantic import BaseModel
-
-class Rule(BaseModel):
-    """An architectural rule to be enforced."""
-    brief_description: str
-    long_description: str
-    example: str
-
-    def to_dict(self):
-        return {
-            "brief": self.brief_description,
-            "long": self.long_description,
-            "example": self.example
-        }
-
-
-class RuleRegistry:
-    """Manages the collection of available strategic rules."""
-    
-    def __init__(self) -> None:
-        self.rules: dict[str, Rule] = {}
-        self._load_rules()
-        self.default_rules = self._get_default_rules()
-    
-    def _load_rules(self) -> None:
-        """Load the default set of rules into self.rules."""
-        rules_folder = Path("rules")
-        for filename in rules_folder.glob("*.json"):            
-            with filename.open("r", encoding="utf-8") as f:
-                data = json.load(f)
-            
-            self.rules[filename.stem] = Rule(
-                brief_description=data["brief_description"],
-                long_description=data["long_description"],
-                example=data["example"]
-            )
-
-    def _get_default_rules() -> list[str]:
-        """Load the default rule list."""
-        path = Path("data/default_rules.txt")
-
-        with path.open("r", encoding="utf-8") as f:
-            return [line.strip() for line in f if line.strip()]
-    
-    def get_rules(self, rule_codes: list[str] | None) -> list[Rule]:
-        """Get rules by their codes."""
-        if not rule_codes:
-            rule_codes = self.default_rules
-        
-        return [self.rules[code] for code in rule_codes if code in self.rules]
-    
-
-class File(BaseModel):
-    """Representation of a file."""
-    name: str
-    content: str
-
-
-class Config(BaseModel):
-    """config for the app or something idk."""
-    rules: list[Rule]
-    files: list[File]
-    api_key: str | None = None
-
-#!/usr/bin/env python3
-"""
-dull - LLM-based code linting tool
-A simple prototype that uses LLMs to lint code against architectural principles.
-"""
-
-import json
-import argparse
-import sys
-from pathlib import Path
-from typing import List, Dict, Any, Optional
-import tomllib
-import openai
 from pydantic import BaseModel
 
 
@@ -89,23 +12,37 @@ class Rule(BaseModel):
     brief_description: str
     long_description: str
     example: str
-
-    def to_dict(self):
-        return {
-            "brief": self.brief_description,
-            "long": self.long_description,
-            "example": self.example
-        }
 
     def __str__(self) -> str:
         return f"#{self.brief_description}\n*{self.long_description}*\n**Example**: {self.example}"
 
 
+class Rules(BaseModel):
+    rules: list[Rule]
+
+    def __str__(self) -> str:
+        return "/n".join([rule for rule in self.rules])
+    
+    def append(self, value: Rule) -> None:
+        if not isinstance(value, Rule):
+            raise TypeError("Can only append Rule type objects to Rules!")
+        
+        self.rules.append(value)
+    
+    def __add__(self, value):
+        if isinstance(value, Rules):
+            self.rules = list(set(self.rules + value))
+        elif isinstance(value, Rule):
+            self.rules = list(set(self.rules.append(value)))
+
+        raise TypeError(f"Cannot add object of type {type(value)} to object of type Rules!")
+        
+
 class RuleRegistry:
     """Manages the collection of available strategic rules."""
     
     def __init__(self) -> None:
-        self.rules: dict[str, Rule] = {}
+        self.rules_dict: dict[str, Rule] = {}
         self._load_rules()
         self.default_rules = self._get_default_rules()
     
@@ -116,7 +53,7 @@ class RuleRegistry:
             with filename.open("r", encoding="utf-8") as f:
                 data = json.load(f)
             
-            self.rules[filename.stem] = Rule(
+            self.rules_dict[filename.stem] = Rule(
                 brief_description=data["brief_description"],
                 long_description=data["long_description"],
                 example=data["example"]
@@ -129,12 +66,14 @@ class RuleRegistry:
         with path.open("r", encoding="utf-8") as f:
             return [line.strip() for line in f if line.strip()]
     
-    def get_rules(self, rule_codes: list[str] | None) -> list[Rule]:
+    def get_rules(self, rule_codes: list[str] | None) -> Rules:
         """Get rules by their codes."""
         if not rule_codes:
             rule_codes = self.default_rules
         
-        return [self.rules[code] for code in rule_codes if code in self.rules]
+        return Rules(
+            rules=[self.rules_dict[code] for code in rule_codes if code in self.rules_dict]
+        )
 
 
 class File(BaseModel):
@@ -145,14 +84,17 @@ class File(BaseModel):
     def __str__(self) -> str:
         return f"#{self.name}\n{self.content}"
 
+
 class Config(BaseModel):
     """Config for the app."""
-    rules: list[Rule]
+    rules: Rules
     files: list[File]
-    api_key: Optional[str] = None
+    api_key: Optional[str]
+    rule_registry: RuleRegistry
 
-    def __init__(self, rule_registry: RuleRegistry, **data):
+    def __init__(self, rule_registry: RuleRegistry | None, **data):
         raw_config = Config._load()
+        data["rule_registry"] = rule_registry or RuleRegistry()
 
         rule_codes = raw_config.get("rules", [])
         data["rules"] = rule_registry.get_rules(rule_codes or None)

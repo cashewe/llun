@@ -1,10 +1,9 @@
 import json
-import os
 import typer
 from typing import Annotated
 import pprint
-from src.dull.config import RuleRegistry
 from src.dull.openai_client import OpenAiClient
+from src.dull.config import Config
 
 OptionsList = Annotated[list[str] | None, typer.Option()]  # this will apparently allow you to input multiple values 
 # its not super clear tbh the docs are ambiguous when it comes to special types...
@@ -26,20 +25,16 @@ def check(
     if not file:
         file = ["."]
 
-    files = get_files(file)
-    config = load_config()
-    api_key = os.getenv("OPENAI_API_KEY")
-    rule_registry = RuleRegistry()
-    rules = rule_registry.get_rules(rules or config.get("rules", []) or rule_registry.default_rules)
+    config = Config()
     
     llm_client = OpenAiClient(
-        api_key=api_key,
+        config=config,
         rules=rules,
         context=context,
-        code=files
+        code=file,
     )
 
-    pprint(json.dumps(llm_client.lint_code(files, rules), indent=4))
+    pprint(json.dumps(llm_client.lint_code(file, rules), indent=4))
 
 
 if __name__ == "__main__":
