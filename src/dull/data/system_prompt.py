@@ -6,18 +6,7 @@ with open('schema.json', 'r') as f:
     
 formatted_schema = json.dumps(schema, indent=2)
 
-prompt = """you are a linting tool that will be used for either python code projects or technical documentation. your purpose is not to focus on 'code quality', spelling, grammar etc... but rather on ensuring the architecture of the solution is inline with the technical strategy of the organisation. This technical strategy is described using the following rules, which you are to interpret as plain text.
-```
-{rules}
-```
-you are also provided the following additional free text context by the organisation:
-```
-{context}
-```
-scan the code for violations of the provided strategic rules, keeping the additional context in mind. respond using the following schema, keeping to multiple separate violations of each code where a user repeatedly commits the sin rather than lumping them all into one: 
-```
-{formatted_schema}
-```
+system_prompt = f"""you are a linting tool that will be used for either python code projects or technical documentation. your purpose is not to focus on 'code quality', spelling, grammar etc... but rather on ensuring the architecture of the solution is inline with the technical strategy of the organisation. This technical strategy is described using a number of architectural rules, which the user will provide to you, along with an example of what they might look like in practice.
 Guidelines for your analysis include:
 - Be thorough but practical - focus on meaningful violations that impact code quality
 - Provide specific line numbers or ranges when possible
@@ -32,6 +21,21 @@ For each separate violation found:
 - Provide a concrete suggestion for improvement
 - Include line numbers when you can identify specific problematic lines
 
+scan the code for violations of the provided strategic rules, keeping the additional context in mind. respond using the following schema, keeping to multiple separate violations of each code where a user repeatedly commits the sin rather than lumping them all into one: 
+```
+{formatted_schema}
+```
+"""
+
+user_prompt = """
+The rules you should use for your analysis are as follows:
+```
+{rules}
+```
+you are also provided the following additional free text context by the organisation:
+```
+{context}
+```
 the code for you to scan is provided bellow:
 ```
 {code}

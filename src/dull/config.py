@@ -22,21 +22,7 @@ class Rules(BaseModel):
 
     def __str__(self) -> str:
         return "/n".join([rule for rule in self.rules])
-    
-    def append(self, value: Rule) -> None:
-        if not isinstance(value, Rule):
-            raise TypeError("Can only append Rule type objects to Rules!")
-        
-        self.rules.append(value)
-    
-    def __add__(self, value):
-        if isinstance(value, Rules):
-            self.rules = list(set(self.rules + value))
-        elif isinstance(value, Rule):
-            self.rules = list(set(self.rules.append(value)))
 
-        raise TypeError(f"Cannot add object of type {type(value)} to object of type Rules!")
-        
 
 class RuleRegistry:
     """Manages the collection of available strategic rules."""
@@ -83,6 +69,13 @@ class File(BaseModel):
 
     def __str__(self) -> str:
         return f"#{self.name}\n{self.content}"
+
+
+class Files(BaseModel):
+    files: list[File]
+
+    def __str__(self) -> str:
+        return "\n".join([file for file in self.files])
 
 
 class Config:
@@ -139,23 +132,3 @@ class Config:
             
             else:
                 raise FileNotFoundError("You've gone and asked for a file you haven't even provided. gimp.")
-
-    def stringify_rules(self) -> str:
-        """transform the rules to a readable string.
-        
-        Note
-        ----
-        this may *look* exactly the same as the following `stringify_files` function,
-        and thats because it is.
-        """
-        return "\n".join([rule for rule in self.rules])
-    
-    def stringify_files(self) -> str:
-        """transform the files to a readable string.
-        
-        Note
-        ----
-        In all seriousness, this is intentional duplication of the `stringify_rules`
-        method, just incase they diverge later.
-        """
-        return "\n".join([file for file in self.files])

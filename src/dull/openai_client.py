@@ -5,8 +5,8 @@ from typing import Any
 
 import openai
 
-from _types import Rule
-from data.system_prompt import prompt, formatted_schema
+from config import Config
+from data.system_prompt import system_prompt, user_prompt
 
 
 class OpenAiClient:
@@ -14,44 +14,25 @@ class OpenAiClient:
     
     def __init__(
         self,
-        api_key: str,
-        rules=str,
-        context=str,
-        code=str,
+        config: Config,
+        context: str,
     ):
-        self.client = openai.OpenAI(api_key=api_key)
-        self.system_prompt = prompt.format(
-            rules=rules,
+        self.client = openai.OpenAI(api_key=config.api_key)
+        self.system_prompt = system_prompt
+        self.user_prompt = user_prompt.format(
+            rules=str(config.rules),
             context=context,
-            code=code,
-            formatted_schema=formatted_schema,
+            code=str(config.files),
         )
 
-    def lint_code(self, files: list[Path], rules: list[Rule]) -> dict[str, Any]:
-        """Send code and rules to LLM for analysis."""
-        formatted_rules = [rule.to_dict() for rule in rules]
-        
-        # Read file contents
-        file_contents = {}
-        for file_path in files:
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    file_contents[str(file_path)] = f.read()
-            except Exception as e:
-                print(f"Warning: Could not read {file_path}: {e}", file=sys.stderr)
-        
-        user_message = {
-            "rules_to_check": formatted_rules,
-            "files": file_contents,
-            "expected_response_schema": formatted_schema,
-            "instructions": "Analyze the provided files against the given rules. Return violations in the specified JSON schema format."
-        }
+    def lint_code(self) -> dict[str, Any]:
+        """Send code and rules to LLM for analysis."""        
         
         response = self.client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "system", "content": self.system_prompt},
-                {"role": "user", "content": json.dumps(user_message, indent=2)}
+                {"role": "user", "content": self.user_prompt},
             ],
             temperature=0.1
         )

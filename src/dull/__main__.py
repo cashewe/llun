@@ -26,15 +26,15 @@ def check(
         file = ["."]
 
     config = Config()
+
+    # check for command line use of rules or files, and replace them in the Config if discovered
     
     llm_client = OpenAiClient(
         config=config,
-        rules=rules,
         context=context,
-        code=file,
     )
 
-    pprint(json.dumps(llm_client.lint_code(file, rules), indent=4))
+    pprint(json.dumps(llm_client.lint_code(), indent=4))
 
 
 if __name__ == "__main__":
