@@ -22,12 +22,11 @@ def check(
     ----------
     rules: List of rules to run.
     """
-    if not file:
-        file = ["."]
-
     config = Config()
 
     # check for command line use of rules or files, and replace them in the Config if discovered
+    # should this be handled by the config or should we have a configmanager that does the alterations?
+    # probs the latter but its sweatty af you have to admit...
     
     llm_client = OpenAiClient(
         config=config,

@@ -14,6 +14,7 @@ Guidelines for your analysis include:
 - Consider the context and purpose of the code
 - Don't flag minor stylistic preferences unless they clearly violate the specified rules, and dont flag 'code quality' issues which can be caught via traditional linter
 - Be consistent in your evaluation across all files
+- if the code repeatedly violates a rule, tell the user of each violation separately rather than lumping all violations into one warning per rule
 
 For each separate violation found:
 - Clearly identify which rule is violated
@@ -21,7 +22,7 @@ For each separate violation found:
 - Provide a concrete suggestion for improvement
 - Include line numbers when you can identify specific problematic lines
 
-scan the code for violations of the provided strategic rules, keeping the additional context in mind. respond using the following schema, keeping to multiple separate violations of each code where a user repeatedly commits the sin rather than lumping them all into one: 
+scan the code for violations of the provided strategic rules, keeping the additional context in mind. respond in json format using the following schema: 
 ```
 {formatted_schema}
 ```

@@ -17,7 +17,7 @@ class Rule(BaseModel):
         return f"#{self.brief_description}\n*{self.long_description}*\n**Example**: {self.example}"
 
 
-class Rules(BaseModel):
+class Rules(BaseModel):  # why does pydantic RootModel exist? seems to add nothing but complexity?
     rules: list[Rule]
 
     def __str__(self) -> str:
@@ -119,13 +119,13 @@ class Config:
         return config
 
     @staticmethod
-    def _get_files(file_patterns: list[str]):
+    def _get_files(file_patterns: list[str]) -> Files:
         """Get the list of files the user has requested."""
         file_list = []
 
         for pattern in file_patterns:
             if pattern == ".":
-                return list(Path(".").rglob("*.py"))  # we *DO NOT* lint .doc :(
+                return Files(list(Path(".").rglob("*.py")))  # by default, run exclusively on .py files to save tokens.
             
             elif Path(pattern).exists():
                 file_list.append(Path(pattern))
@@ -133,4 +133,4 @@ class Config:
             else:
                 raise FileNotFoundError("You've gone and asked for a file you haven't even provided. gimp.")
 
-        return file_list
+        return Files(file_list)
