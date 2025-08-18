@@ -1,0 +1,12 @@
+The rules you should use for your analysis are as follows:
+```
+{rules}
+```
+you are also provided the following additional free text context by the organisation:
+```
+{context}
+```
+the code for you to scan is provided bellow:
+```
+{code}
+```

@@ -6,7 +6,7 @@ from typing import Any
 import openai
 
 from config import Config
-from data.system_prompt import system_prompt, user_prompt
+from src.dull.data.prompts import system_prompt, user_prompt
 
 
 class OpenAiClient:
