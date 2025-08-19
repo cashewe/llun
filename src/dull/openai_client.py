@@ -4,7 +4,7 @@ from typing import Any
 import openai
 
 from config import Config
-from src.dull._prompts import system_prompt, user_prompt
+from src.dull._prompts import PromptManager
 
 
 class OpenAiClient:
@@ -16,8 +16,8 @@ class OpenAiClient:
         context: str,
     ):
         self.client = openai.OpenAI(api_key=config.api_key)
-        self.system_prompt = system_prompt
-        self.user_prompt = user_prompt.format(
+        self.prompt_manager = PromptManager()
+        self.prompt_manager.user_prompt.format(
             rules=str(config.rules),
             context=context,
             code=str(config.files),
@@ -29,8 +29,8 @@ class OpenAiClient:
         response = self.client.chat.completions.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": self.system_prompt},
-                {"role": "user", "content": self.user_prompt},
+                {"role": "system", "content": self.prompt_manager.system_prompt},
+                {"role": "user", "content": self.prompt_manager.user_prompt},
             ],
             temperature=0.1
         )
