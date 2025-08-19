@@ -1,12 +1,10 @@
 import json
-from pathlib import Path
-import sys
 from typing import Any
 
 import openai
 
 from config import Config
-from src.dull.data.prompts import system_prompt, user_prompt
+from src.dull._prompts import system_prompt, user_prompt
 
 
 class OpenAiClient:
