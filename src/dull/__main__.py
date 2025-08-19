@@ -13,7 +13,7 @@ app = typer.Typer()
 @app.command()
 def check(
     rules: OptionsList = None,
-    file: OptionsList = None,
+    files: OptionsList = None,
     context: str = "",
 ):
     """Check the provided files for ViOlAtIoNs.
@@ -22,11 +22,10 @@ def check(
     ----------
     rules: List of rules to run.
     """
-    config = Config()
-
-    # check for command line use of rules or files, and replace them in the Config if discovered
-    # should this be handled by the config or should we have a configmanager that does the alterations?
-    # probs the latter but its sweatty af you have to admit...
+    config = Config(
+        rules=rules,
+        files=files,
+    )
     
     llm_client = OpenAiClient(
         config=config,

@@ -83,16 +83,20 @@ class Config:
 
     def __init__(
         self,
-        rule_registry: RuleRegistry | None
+        rule_registry: RuleRegistry | None,
+        rules: list[str],
+        files: list[str],
     ):
         raw_config = Config._load()
         self.rule_registry = rule_registry or RuleRegistry()
 
-        rule_codes = raw_config.get("rules", [])
-        self.rules = rule_registry.get_rules(rule_codes or None)
+        if not rules:
+            rules = raw_config.get("rules", [])
+        self.rules = rule_registry.get_rules(rules or None)
 
-        file_patterns = raw_config.get("files", ["."])
-        self.files = Config._get_files(file_patterns)
+        if not files:
+            files = raw_config.get("files", ["."])
+        self.files = Config.get_files(files)
 
         self.api_key = raw_config.get("openai_api_key") or os.getenv("OPENAI_API_KEY")
 
@@ -119,7 +123,7 @@ class Config:
         return config
 
     @staticmethod
-    def _get_files(file_patterns: list[str]) -> Files:
+    def get_files(file_patterns: list[str]) -> Files:
         """Get the list of files the user has requested."""
         file_list = []
 

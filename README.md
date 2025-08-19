@@ -10,8 +10,8 @@ The target audience would be companies looking to super charge their python use 
 
 - create a default behaviour [X]
 - create the option to use toml files to overwrite the defaul behaviour [X]
-- refactor the prompts to use the txt files []
-- create the option to use cmd commands to overwrite the toml behaviour []
+- refactor the prompts to use the txt files [X]
+- create the option to use cmd commands to overwrite the toml behaviour [X]
 - get access back to my github so i can test the prototype, and fix any glaring bugs []
 - trim all unneccessary code away until all thats left is the bare minimum []
 - ensure the suggested design scales well for future feature extension, potentially could use the tool itself for this just for fun tbh []
