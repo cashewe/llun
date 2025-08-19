@@ -2,7 +2,7 @@ import json
 import os
 from pathlib import Path
 import tomllib
-from typing import Any, Optional
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -71,65 +71,25 @@ class File(BaseModel):
         return f"#{self.name}\n{self.content}"
 
 
-class Files(BaseModel):
-    files: list[File]
-
-    def __str__(self) -> str:
-        return "\n".join([file for file in self.files])
-
-
-class Config:
-    """Config for the app."""
+class Files:
+    """Manages the file requests the user makes."""
 
     def __init__(
         self,
-        rule_registry: RuleRegistry | None,
-        rules: list[str],
-        files: list[str],
+        paths: list[str] = ["."]
     ):
-        raw_config = Config._load()
-        self.rule_registry = rule_registry or RuleRegistry()
-
-        if not rules:
-            rules = raw_config.get("rules", [])
-        self.rules = rule_registry.get_rules(rules or None)
-
-        if not files:
-            files = raw_config.get("files", ["."])
-        self.files = Config.get_files(files)
-
-        self.api_key = raw_config.get("openai_api_key") or os.getenv("OPENAI_API_KEY")
+        self.files: list[File] = []
+        resolved_paths = Files._get_paths(paths)
+        self._get_files(resolved_paths)
 
     @staticmethod
-    def _load() -> dict[str, Any]:
-        """Load configuration from available config files.
-
-        I'm going by convention that the config files will be either
-        pyproject.toml or dull.toml files.
-        """
-        config = {}
-        pyproject_path = Path("pyproject.toml")
-        if pyproject_path.exists():
-            with open(pyproject_path, "rb") as f:
-                data = tomllib.load(f)
-                config = data.get("tool", {}).get("dull", {})
-        
-        else:
-            dull_path = Path("dull.toml")
-            if dull_path.exists():
-                with open(dull_path, "rb") as f:
-                    config = tomllib.load(f)
-        
-        return config
-
-    @staticmethod
-    def get_files(file_patterns: list[str]) -> Files:
-        """Get the list of files the user has requested."""
+    def _get_paths(file_patterns: list[str]) -> list[Path]:
+        """Get the list of files the user has requested and validate they exist."""
         file_list = []
 
         for pattern in file_patterns:
             if pattern == ".":
-                return Files(list(Path(".").rglob("*.py")))  # by default, run exclusively on .py files to save tokens.
+                return list(Path(".").rglob("*.py"))  # by default, run exclusively on .py files to save tokens.
             
             elif Path(pattern).exists():
                 file_list.append(Path(pattern))
@@ -137,4 +97,75 @@ class Config:
             else:
                 raise FileNotFoundError("You've gone and asked for a file you haven't even provided. gimp.")
 
-        return Files(file_list)
+        return file_list
+
+    def _get_files(self, paths: list[Path]) -> None:
+        for path in paths:
+            with open(path, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            self.files.append(
+                File(
+                    name=str(path),
+                    content=content,
+                )
+            )
+
+    def __str__(self) -> str:
+        return "\n".join([str(file) for file in self.files])
+    
+
+class DullPyproject:
+    """Manage pyproject.toml file."""
+
+    def __init__(self):
+        self.config = {}
+
+    def _load_pyproject(self):
+        pyproject_path = Path("pyproject.toml")
+        if pyproject_path.exists():
+            with open(pyproject_path, "rb") as f:
+                data = tomllib.load(f)
+                self.config = data.get("tool", {}).get("dull", {})
+
+    def get(self, el: str, default: Any) -> list[str] | None:
+        """Thin wrapper on dict.get for if i change away from a dict."""
+        return self.config.get(el, default)
+
+
+class Config(BaseModel):
+    rules: Rules
+    files: Files
+    api_key: str
+
+
+class ConfigFactory:
+    """Create config for the app."""
+
+    def __init__(
+        self,
+        rule_registry: RuleRegistry | None,
+    ):
+        self.raw_config = DullPyproject()
+        self.rule_registry = rule_registry or RuleRegistry()
+
+    def create_config(
+        self,
+        rules: list[str],
+        files: list[str],
+    ) -> Config:
+        if not rules:
+            rules = self.raw_config.get("rules", [])
+        self.rules = self.rule_registry.get_rules(rules or None)
+
+        if not files:
+            files = self.raw_config.get("files", ["."])
+        self.files = Files(paths=files)
+
+        api_key = self.raw_config.get("openai_api_key") or os.getenv("OPENAI_API_KEY")
+
+        return Config(
+            rules=rules,
+            files=files,
+            api_key=api_key
+        )
