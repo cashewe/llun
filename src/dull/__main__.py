@@ -3,7 +3,7 @@ import typer
 from typing import Annotated
 import pprint
 from src.dull.openai_client import OpenAiClient
-from src.dull.config import Config
+from src.dull.config import ConfigFactory
 
 OptionsList = Annotated[list[str] | None, typer.Option()]  # this will apparently allow you to input multiple values 
 # its not super clear tbh the docs are ambiguous when it comes to special types...
@@ -22,7 +22,7 @@ def check(
     ----------
     rules: List of rules to run.
     """
-    config = Config(
+    config = ConfigFactory().create_config(
         rules=rules,
         files=files,
     )

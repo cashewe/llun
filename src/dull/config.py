@@ -116,7 +116,15 @@ class Files:
     
 
 class DullPyproject:
-    """Manage pyproject.toml file."""
+    """Manage pyproject.toml file.
+    
+    Notes
+    -----
+    This doesnt really scale to multiple pyprojects in a nest etc... does it
+    do i care?
+    probably not?
+    but part of the point is to care too much right?
+    """
 
     def __init__(self):
         self.config = {}
