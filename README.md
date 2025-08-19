@@ -6,7 +6,7 @@ The tool will make use of LLMs to create a 'strategic linter' - a tool which can
 
 The target audience would be companies looking to super charge their python use without experienced staff engineers on hand to review every PR etc...
 
-# TODO:
+## TODO:
 
 I've broken the roadmap down into three phases:
 
