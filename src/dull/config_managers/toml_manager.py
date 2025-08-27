@@ -5,7 +5,7 @@ from typing import Any
 
 class DullPyproject:
     """Manage pyproject.toml file.
-    
+
     Notes
     -----
     This doesnt really scale to multiple pyprojects in a nest etc... does it

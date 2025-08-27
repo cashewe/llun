@@ -22,10 +22,9 @@ Phase 1 - MVP
 - create the option to use toml files to overwrite the defaul behaviour [X]
 - refactor the prompts to use the txt files [X]
 - create the option to use cmd commands to overwrite the toml behaviour [X]
-- get access back to my github so i can test the prototype, and fix any glaring bugs []
+- get access back to my github so i can test the prototype, and fix any glaring bugs [X]
 - trim all unneccessary code away until all thats left is the bare minimum [X]
 - ensure the suggested design scales well for future feature extension, potentially could use the tool itself for this just for fun tbh [X]
-- pick a new name as despite finding dull to be hilarious, its likely already take on pypi []
 
 Phase 2 - rust refactor
 -----------------------
@@ -48,3 +47,4 @@ Phase 3 - beyond MVP
 - write vscode extension []
 - write azure pipelines extension []
 - write github actions extension []
+- improve prompt to ensure model outputs are as expected []

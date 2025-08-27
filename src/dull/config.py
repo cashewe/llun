@@ -39,10 +39,8 @@ class ConfigFactory:
             files = self.raw_config.get("files", ["."])
         files = Files(paths=files)
 
-        api_key = os.getenv("OPENAI_API_KEY") or self.raw_config.get("openai_api_key", "no key!")
-
-        return Config(
-            rules=rules,
-            files=files,
-            api_key=api_key
+        api_key = os.getenv("OPENAI_API_KEY") or self.raw_config.get(
+            "openai_api_key", "no key!"
         )
+
+        return Config(rules=rules, files=files, api_key=api_key)

@@ -5,10 +5,13 @@ import pprint
 from dull.openai_client import OpenAiClient
 from dull.config import ConfigFactory
 
-OptionsList = Annotated[list[str] | None, typer.Option()]  # this will apparently allow you to input multiple values 
+OptionsList = Annotated[
+    list[str] | None, typer.Option()
+]  # this will apparently allow you to input multiple values
 # its not super clear tbh the docs are ambiguous when it comes to special types...
 
 app = typer.Typer()
+
 
 @app.command()
 def check(
@@ -17,7 +20,7 @@ def check(
     context: str = "",
 ):
     """Check the provided files for ViOlAtIoNs.
-    
+
     Parameters
     ----------
     rules: List of rules to run.
@@ -26,7 +29,7 @@ def check(
         rules=rules,
         files=files,
     )
-    
+
     llm_client = OpenAiClient(
         config=config,
         context=context,

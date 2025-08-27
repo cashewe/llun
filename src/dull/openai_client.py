@@ -54,7 +54,7 @@ class PromptManager:
 
 class OpenAiClient:
     """Handles communication with the LLM service."""
-    
+
     def __init__(
         self,
         config: Config,
@@ -64,15 +64,16 @@ class OpenAiClient:
         self.prompt_manager = PromptManager(config, context)
 
     def lint_code(self) -> dict[str, Any]:
-        """Send code and rules to LLM for analysis."""        
-        
+        """Send code and rules to LLM for analysis."""
+
         response = self.client.chat.completions.create(
-            model="gpt-4",
-            messages=self.prompt_manager.get_prompts(),
-            temperature=0.1
+            model="gpt-4", messages=self.prompt_manager.get_prompts(), temperature=0.1
         )
-        
+
         try:
             return json.loads(response.choices[0].message.content)
         except json.JSONDecodeError:
-            return {"error": "Failed to parse LLM response as JSON", "raw_response": response.choices[0].message.content}
+            return {
+                "error": "Failed to parse LLM response as JSON",
+                "raw_response": response.choices[0].message.content,
+            }
