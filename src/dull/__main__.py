@@ -2,8 +2,8 @@ import json
 import typer
 from typing import Annotated
 import pprint
-from src.dull.openai_client import OpenAiClient
-from src.dull.config import ConfigFactory
+from dull.openai_client import OpenAiClient
+from dull.config import ConfigFactory
 
 OptionsList = Annotated[list[str] | None, typer.Option()]  # this will apparently allow you to input multiple values 
 # its not super clear tbh the docs are ambiguous when it comes to special types...
@@ -32,7 +32,9 @@ def check(
         context=context,
     )
 
-    pprint(json.dumps(llm_client.lint_code(), indent=4))
+    linted_code = llm_client.lint_code()
+
+    pprint.pprint(json.dumps(linted_code, indent=4))
 
 
 if __name__ == "__main__":

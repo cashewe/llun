@@ -1,3 +1,4 @@
+from importlib import resources
 import json
 from pathlib import Path
 
@@ -17,7 +18,7 @@ class Rules(BaseModel):  # why does pydantic RootModel exist? seems to add nothi
     rules: list[Rule]
 
     def __str__(self) -> str:
-        return "/n".join([rule for rule in self.rules])
+        return "/n".join([str(rule) for rule in self.rules])
 
 
 class RuleRegistry:
@@ -32,22 +33,25 @@ class RuleRegistry:
     
     def _load_rules(self) -> None:
         """Load the default set of rules into self.rules."""
-        rules_folder = Path("rules")
-        for filename in rules_folder.glob("*.json"):            
-            with filename.open("r", encoding="utf-8") as f:
-                data = json.load(f)
-            
-            self.rules_dict[filename.stem] = Rule(
-                brief_description=data["brief_description"],
-                long_description=data["long_description"],
-                example=data["example"]
-            )
+        package = "dull.rules"  # adjust if your JSON files are in a different subpackage
+
+        # Iterate through all JSON resources in the package
+        for entry in resources.files(package).iterdir():
+            if entry.suffix == ".json":
+                with entry.open("r", encoding="utf-8") as f:
+                    data = json.load(f)
+
+                self.rules_dict[entry.stem] = Rule(
+                    brief_description=data["brief_description"],
+                    long_description=data["long_description"],
+                    example=data["example"]
+                )
 
     def _get_default_rules(self) -> None:
         """Load the default rule list."""
-        path = Path("data/default_rules.txt")
+        package = "dull.data"
 
-        with path.open("r", encoding="utf-8") as f:
+        with resources.files(package).joinpath("default_rules.txt").open("r", encoding="utf-8") as f:
             self.default_rules = [line.strip() for line in f if line.strip()]
     
     def get_rules(self, rule_codes: list[str] | None) -> Rules:

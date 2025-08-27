@@ -1,9 +1,10 @@
+from importlib import resources
 import json
 from typing import Any
 
 import openai
 
-from config import Config
+from dull.config import Config
 
 
 class PromptManager:
@@ -17,22 +18,28 @@ class PromptManager:
 
     @staticmethod
     def _load_system_prompt() -> str:
-        with open('data/schema.json', 'r') as f:
+        package = "dull.data"
+
+        schema_path = resources.files(package).joinpath("response_schema.json")
+        with schema_path.open("r", encoding="utf-8") as f:
             schema = json.load(f)
-            
         formatted_schema = json.dumps(schema, indent=2)
 
-        with open('data/system_prompt.txt', 'r', encoding='utf-8') as file:
-            return file.read().format(formatted_schema)
+        system_prompt_path = resources.files(package).joinpath("system_prompt.txt")
+        with system_prompt_path.open("r", encoding="utf-8") as f:
+            prompt = f.read()
+        return prompt.format(formatted_schema=formatted_schema)
 
     @staticmethod
     def _load_user_prompt(
         config: Config,
         context: str,
     ) -> str:
-        """NOTE: the user_prompt object needs to be formatted during use."""
-        with open('data/user_prompt.txt', 'r', encoding='utf-8') as file:
-            return file.read().format(
+        package = "dull.data"
+
+        user_prompt_path = resources.files(package).joinpath("user_prompt.txt")
+        with user_prompt_path.open("r", encoding="utf-8") as f:
+            return f.read().format(
                 rules=str(config.rules),
                 context=context,
                 code=str(config.files),

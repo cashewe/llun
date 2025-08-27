@@ -2,7 +2,7 @@ import os
 
 from pydantic import BaseModel
 
-from config_managers import (
+from dull.config_managers import (
     DullPyproject,
     Files,
     Rules,
@@ -21,7 +21,7 @@ class ConfigFactory:
 
     def __init__(
         self,
-        rule_registry: RuleRegistry | None,
+        rule_registry: RuleRegistry | None = None,
     ):
         self.raw_config = DullPyproject()
         self.rule_registry = rule_registry or RuleRegistry()
@@ -33,13 +33,13 @@ class ConfigFactory:
     ) -> Config:
         if not rules:
             rules = self.raw_config.get("rules", [])
-        self.rules = self.rule_registry.get_rules(rules or None)
+        rules = self.rule_registry.get_rules(rules or None)
 
         if not files:
             files = self.raw_config.get("files", ["."])
-        self.files = Files(paths=files)
+        files = Files(paths=files)
 
-        api_key = self.raw_config.get("openai_api_key") or os.getenv("OPENAI_API_KEY")
+        api_key = os.getenv("OPENAI_API_KEY") or self.raw_config.get("openai_api_key", "no key!")
 
         return Config(
             rules=rules,

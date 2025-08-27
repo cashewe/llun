@@ -14,7 +14,8 @@ For each separate violation found:
 - Provide a concrete suggestion for improvement
 - Include line numbers when you can identify specific problematic lines
 
-scan the code for violations of the provided strategic rules, keeping the additional context in mind. respond in json format using the following schema: 
+scan the code for violations of the provided strategic rules, keeping the additional context in mind. respond in json format only using the following schema: 
 ```
 {formatted_schema}
 ```
+DO NOT include any free text, and your json response should be in plain json, not json dumped
