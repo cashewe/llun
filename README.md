@@ -21,10 +21,13 @@ this code will remain for refference but will no longer recieve active support.
 
 Phase 2 - rust refactor
 -----------------------
+the results of this process so far are in the 'dull/src' directory. dont ask me why i chose to just swap the folder names and act like thats legible. i dont have an answer other than the cargo initialisation did it for me.
+
+- learn basic rust [X]
 - rewrite config manager in rust []
 - rewrite openai client in rust []
 - rewrite prompt manager in rust []
-- rewrite cli in rust []
+- rewrite cli in rust [X]
 - wrap rust cli in python forwarding logic []
 - publish to pypi despite the whole cargo crate being rust based []
 

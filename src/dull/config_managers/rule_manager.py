@@ -37,10 +37,9 @@ class RuleRegistry:
     def _load_rules(self) -> None:
         """Load the default set of rules into self.rules."""
         package = (
-            "dull.rules"  # adjust if your JSON files are in a different subpackage
+            "dull.rules"
         )
 
-        # Iterate through all JSON resources in the package
         for entry in resources.files(package).iterdir():
             if entry.suffix == ".json":
                 with entry.open("r", encoding="utf-8") as f:
