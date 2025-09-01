@@ -22,6 +22,8 @@ enum Commands {
         path: PathBuf,
         #[arg(short, long)]
         select: Option<Vec<String>>, // vec<string> means i can have multiple 'select' calls, Option<> means i can also have none and default
+        #[arg(short, long)]
+        ignore: Option<Vec<String>>, // if you use ignore itll remove the rule even if selected
     },
 }
 
@@ -29,8 +31,9 @@ fn main() {
     let cli = Cli::parse();
     
     match &cli.command {
-        Commands::Check { path, select } => {
+        Commands::Check { path, select, ignore } => {
             let valid_rules = validate_rules();  // will probs need to move this into the rulesmanager class once i figure out oop
+            let ignore = ignore.clone().unwrap_or_default();
             let selected_rules = if let Some(list) = select {
                 list.clone()
             } else {
@@ -42,9 +45,10 @@ fn main() {
             for s in &selected_rules {
                 if !valid_rules.contains(s) {
                     eprintln!("Invalid rule name selected {}", s);
-                    std::process::exit(1);
                 }
-                println!("Selected: {}", s);
+                if !ignore.contains(s) {
+                    println!("Selected: {}", s);  // replace this with a check for if its not duplicate and if so, add to the list of rules to use
+                }
             }
         }
     }
