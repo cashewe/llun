@@ -1,10 +1,10 @@
-use clap::{Parser, Subcommand};
-use include_dir::{include_dir, Dir};
 use std::path::PathBuf;
 use std::collections::HashSet;
 
-static RULES_DIR: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/data/rules");
-const DEFAULT_RULES: &str = include_str!("../data/default_rules.txt");
+use clap::{Parser, Subcommand};
+
+mod data;
+use data::{RULES_DIR, DEFAULT_RULES};
 
 /// cli for the application
 #[derive(Parser)]
