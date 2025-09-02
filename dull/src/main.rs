@@ -80,7 +80,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 /// validate that the requested rules have matching file names in the rules folder
 fn validate_rules() -> Result<HashSet<String>, Box<dyn std::error::Error>> {
-    let rules =RULES_DIR
+    let rules = RULES_DIR
         .files()
         .filter_map(|file| {
             file
