@@ -1,0 +1,5 @@
+{
+    "brief_description": "Liskov Substitution Principle",
+    "long_description": "Subtypes must be substitutable for their base types without altering the correctness of the program.",
+    "example": "If a function expects a Bird object, passing in a Penguin should not break behavior unless Bird assumed all birds can fly."
+}

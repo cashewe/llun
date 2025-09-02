@@ -1,0 +1,5 @@
+{
+    "brief_description": "Dependency Inversion Principle",
+    "long_description": "High-level modules should not depend on low-level modules; both should depend on abstractions.",
+    "example": "A service should depend on an interface (e.g., PaymentProcessor) rather than a concrete class (e.g., PayPalProcessor)."
+}
