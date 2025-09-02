@@ -1,5 +1,4 @@
 use super::rule::Rule;
-use data::{RULES_DIR};
 
 
 #[derive(Debug, Default)]
@@ -13,11 +12,11 @@ impl Ruleset {
     }
 
     /// load rule files by code
-    pub fn load_from_code(rule_codes: Vec<String>) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn load_from_json(rule_codes: Vec<String>) -> Result<Self, Box<dyn std::error::Error>> {
         let mut collection = Self::new();
 
         for rule_code in rule_codes {
-            match Rule::from_file(rule_code, RULES_DIR) {
+            match Rule::from_file(rule_code) {
                 Ok(rule) => collection.add_rule(rule),
                 Err(e) => eprintln!("Failed to load rule {}: {}", rule_code, e),
             }
