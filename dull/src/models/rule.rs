@@ -23,21 +23,6 @@ impl Rule {
 
         Ok(rule)
     }
-
-    /// create rule programmatically, for custom rules in the pyproject.toml file
-    pub fn new(
-        rule_code: String,
-        brief_description: String,
-        long_description: String,
-        example: String,
-    ) -> Self {
-        Self {
-            rule_code,
-            brief_description,
-            long_description,
-            example,
-        }
-    }
 }
 
 impl fmt::Display for Rule {
