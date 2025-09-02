@@ -25,7 +25,9 @@ enum Commands {
         #[arg(short, long)]
         exclude: Vec<PathBuf>,  // exclude specified files from your path if its a dir
         #[arg(short, long)]
-        select: Vec<String>, // f you dont select, itll use the defaults
+        select: Vec<String>, // if you dont select, itll use the defaults
+        #[arg(long)]
+        extend_select: Vec<String>, // your selection should strictly extend the default set
         #[arg(short, long)]
         ignore: Vec<String>, // if you use ignore itll remove the rule even if selected
     },
@@ -35,7 +37,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
     
     match cli.command {
-        Commands::Check { path, exclude, select, ignore } => {
+        Commands::Check { path, exclude, select, extend_select, ignore } => {
             if !path.exists() {
                 eprintln!("Error: Path '{}' does not exist", path.display());
                 std::process::exit(1);
@@ -43,11 +45,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             let exclude_set: HashSet<PathBuf> = exclude.into_iter().collect();
             let valid_rules = validate_rules()?;  // will probs need to move this into the rulesmanager class once i figure out oop
-            let selected_rules = if select.is_empty() {
+            let mut selected_rules = if select.is_empty() {
                 load_default_rules()?
             } else {
                 select
             };  // if select is a list with at least one value, use it, else default back
+            selected_rules.extend(extend_select);
 
             for rule in &selected_rules {
                 if !valid_rules.contains(rule) {
