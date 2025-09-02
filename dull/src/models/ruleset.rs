@@ -30,7 +30,7 @@ impl Ruleset {
     }
 }
 
-imple fmt::Display for Ruleset {
+impl fmt::Display for Ruleset {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "# Rules\n\n")?;
 
