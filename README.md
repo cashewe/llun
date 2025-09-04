@@ -51,7 +51,11 @@ Phase 3 - beyond MVP
 - write vscode extension []
 - write azure pipelines extension []
 - write github actions extension []
+- write mcp tool []
+- write filetype limits (i.e. it cant parse pdf etc... unless i build readers for it, so limit it to plaintext filetypes) []
+- write filetype filters []
 - improve prompt to ensure model outputs are as expected []
+- figure out optimal query to minimise cost as sending the whole repo etc... is likely to be spenny af []
 
 ## in progress
 
