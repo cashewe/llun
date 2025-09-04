@@ -1,4 +1,6 @@
 pub mod rule;
-pub mod ruleset;
+pub mod rule_set;
+pub mod rule_manager;
 
-pub use ruleset::Ruleset;
+pub use rule_set::RuleSet;
+pub use rule_manager::RuleManager;

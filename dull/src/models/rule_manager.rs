@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 use crate::data::{DEFAULT_RULES, RULES_DIR};
-use crate::models::Ruleset;
+use crate::models::RuleSet;
 
 
 // claude suggested these custom errors
@@ -11,9 +11,10 @@ pub enum RuleManagerError {
     #[error("Failed to load default rules: {0}")]
     DefaultRulesError(String),
     #[error("Failed to load ruleset: {0}")]
-    RulesetLoadError(String),
+    RuleSetLoadError(String),
     #[error("No rules available in directory")]
     NoRulesAvailable,
+}
 
 /// The cli / toml values that a user can use to control rules
 #[derive(Debug, Default, Clone)]
@@ -25,29 +26,33 @@ pub struct RuleSelectionConfig {
 
 #[derive(Debug, Default)]
 pub struct RuleManager {
-    default_rules: &'static str,
+    default_rules: &'static str,  // do we reall benefit from storing this all considered?
     valid_rules: HashSet<String>,
 }
 
 impl RuleManager {
-    pub fn new() {
+    pub fn new() -> Result<Self, RuleManagerError> {
         let valid_rules = Self::get_valid_rules()?;
+        let default_rules = DEFAULT_RULES;
 
         if valid_rules.is_empty() {
             return Err(RuleManagerError::NoRulesAvailable);
         }
 
         Ok(Self {
-            DEFAULT_RULES,
+            default_rules,
             valid_rules,
         })
     }
 
     /// get list of rules files from the rules folder
-    pub fn get_valid_rules() -> Result<HashSet<String>, Box<dyn std::error::Error>> {
-        let valid_rules = RULES_DIR
+    pub fn get_valid_rules() -> Result<HashSet<String>, RuleManagerError> {
+        let valid_rules: HashSet<String> = RULES_DIR
             .files()
-            .filter_map(|file| { // is it worth limiting this to only .jsons or do we just trust i wont break it?
+            .filter(|file| {
+                file.path().extension().and_then(|s| s.to_str()) == Some("json")
+            })
+            .filter_map(|file| {
                 file
                     .path()
                     .file_stem()
@@ -57,22 +62,22 @@ impl RuleManager {
             .collect();
 
         if valid_rules.is_empty() {
-            return Err(RuleManagerError::RulesetLoadError("No rules to load."))
+            return Err(RuleManagerError::RuleSetLoadError("No rules to load.".to_string()))
         }
 
         Ok(valid_rules)
     }
 
     // load the default rules in from the txt file
-    pub fn get_default_rules() -> Result<Vec<String>, Box<dyn std::error::Error>> {
-        let default_rules = DEFAULT_RULES
+    pub fn get_default_rules(&self) -> Result<Vec<String>, RuleManagerError> {
+        let default_rules: Vec<String> = self.default_rules
             .lines()
             .map(|line| line.trim().to_string())
             .filter(|line| !line.is_empty())
             .collect();
 
         if default_rules.is_empty() {
-            return Err(RuleManagerError::DefaultRulesError("No default rules in file."))
+            return Err(RuleManagerError::DefaultRulesError("No default rules in file.".to_string()))
         }
         
         Ok(default_rules)
@@ -95,28 +100,28 @@ impl RuleManager {
 
         let finalised_rules: Vec<String> = selected_rules
                 .into_iter()
-                .filter(|rule| !ignore.contains(rule))
+                .filter(|rule| !config.ignore.contains(rule))
                 .collect();
         
         Ok(finalised_rules)
     }
 
     /// load a ruleset based on provided config
-    pub fn load_ruleset(&self, config: &RuleSelectionConfig) -> Result<Ruleset, RuleManagerError> {
+    pub fn load_ruleset(&self, config: &RuleSelectionConfig) -> Result<RuleSet, RuleManagerError> {
         let finalised_rules = self.finalise_selected_rules(config)?;
 
-        Ruleset::load_from_json(finalised_rules).map_err(|e| RuleManagerError::RulesetLoadError(e.to_string()))
+        RuleSet::load_from_json(finalised_rules).map_err(|e| RuleManagerError::RuleSetLoadError(e.to_string()))
     }
 
     /// load the ruleset object from cli commands
-    pub fn load_from_cli(&self, select: Vec<String>, extend_select: Vec<String>, ignore: Vec<String>) -> Result<Ruleset, RuleManagerError> {
-        let config = RuleSelectionConfig({
+    pub fn load_from_cli(&self, select: Vec<String>, extend_select: Vec<String>, ignore: Vec<String>) -> Result<RuleSet, RuleManagerError> {
+        let config = RuleSelectionConfig {
             select,
             extend_select,
             ignore,
-        });
+        };
 
-        self.load_ruleset(&config)?
+        Ok(self.load_ruleset(&config)?)
     }
 
     // we will eventually need to extend this object to also load from toml, and a hybrid of cli and toml... itll get phat.

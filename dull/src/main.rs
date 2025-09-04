@@ -6,9 +6,8 @@ use std::io;
 use clap::{Parser, Subcommand};
 
 mod data;
-use data::{RULES_DIR, DEFAULT_RULES};
 mod models;
-use models::Ruleset;
+use models::RuleManager;
 
 /// cli for the application
 #[derive(Parser)]
@@ -37,6 +36,7 @@ enum Commands {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
+    let rule_manager = RuleManager::new()?;
     
     match cli.command {
         Commands::Check { path, exclude, select, extend_select, ignore } => {
@@ -45,32 +45,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 eprintln!("Error: Path '{}' does not exist", path.display());
                 std::process::exit(1);
             }
-
             let exclude_set: HashSet<PathBuf> = exclude.into_iter().collect();
-            let valid_rules = validate_rules()?;  // will probs need to move this into the rulesmanager class once i figure out oop
-            let mut selected_rules = if select.is_empty() {
-                load_default_rules()?
-            } else {
-                select
-            };  // if select is a list with at least one value, use it, else default back
-            selected_rules.extend(extend_select);
-
-            for rule in &selected_rules {
-                if !valid_rules.contains(rule) {
-                    eprintln!("Invalid rule name selected {}", rule);
-                    std::process::exit(1);
-                }
-            }
-
-            let filtered_selected_rules: Vec<String> = selected_rules
-                .into_iter()
-                .filter(|rule| !ignore.contains(rule))
-                .collect();
-
-            println!("Selected rules: {:?}", filtered_selected_rules);
-            let rules = Ruleset::load_from_json(filtered_selected_rules);
-
-            println!("transformed rules: {:?}", rules);
 
             let files_to_check = collect_files(&path, &exclude_set)?;
             println!("Files to check:");
@@ -78,37 +53,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("  {}", file.display());
             }
 
+            let rules = rule_manager.load_from_cli(select, extend_select, ignore)?;
+            println!("transformed rules: {:?}", rules);
+
         }
     }
 
     Ok(())
-}
-
-/// validate that the requested rules have matching file names in the rules folder
-fn validate_rules() -> Result<HashSet<String>, Box<dyn std::error::Error>> {
-    let rules = RULES_DIR
-        .files()
-        .filter_map(|file| {
-            file
-                .path()
-                .file_stem()
-                .and_then(|stem| stem.to_str())
-                .map(|s| s.to_string())
-        })
-        .collect();
-
-    Ok(rules)
-}
-
-/// load the default rules list into a vector of strings
-fn load_default_rules() -> Result<Vec<String>, Box<dyn std::error::Error>> {
-    let rules = DEFAULT_RULES
-        .lines()
-        .map(|line| line.trim().to_string())
-        .filter(|line| !line.is_empty())
-        .collect();
-    
-    Ok(rules)
 }
 
 /// get the selected filepaths

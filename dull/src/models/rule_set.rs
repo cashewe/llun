@@ -3,11 +3,11 @@ use super::rule::Rule;
 
 
 #[derive(Debug, Default)]
-pub struct Ruleset {
+pub struct RuleSet {
     rules: Vec<Rule>,
 }
 
-impl Ruleset {
+impl RuleSet {
     pub fn new() -> Self {
         Self::default()
     }
@@ -32,7 +32,7 @@ impl Ruleset {
 }
 
 /// we will (hopefully) use display to insert into a markdown message?
-impl fmt::Display for Ruleset {
+impl fmt::Display for RuleSet {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "# Rules\n\n")?;
 
@@ -44,7 +44,7 @@ impl fmt::Display for Ruleset {
 }
 
 /// owned iteration, may want to implement borrowed itteration in future?
-impl IntoIterator for Ruleset {
+impl IntoIterator for RuleSet {
     type Item = Rule;
     type IntoIter = std::vec::IntoIter<Self::Item>;
 
