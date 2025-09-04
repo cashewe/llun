@@ -28,8 +28,14 @@ impl Ruleset {
     pub fn add_rule(rule: Rule) {
         self.rules.push(rule);
     }
+
+    /// the iterable rules
+    pub fn rules(&self) -> &[Rule] {
+        &self.rules
+    }
 }
 
+/// we will (hopefully) use display to insert into a markdown message?
 impl fmt::Display for Ruleset {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "# Rules\n\n")?;
@@ -38,5 +44,15 @@ impl fmt::Display for Ruleset {
             write!(f, "\n---\n{}\n", rule)?;
         }
         Ok(())
+    }
+}
+
+/// owned iteration, may want to implement borrowed itteration in future?
+impl IntoIterator for Ruleset {
+    type Item = Rule;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.rules.into_iter()
     }
 }
