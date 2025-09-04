@@ -8,7 +8,7 @@ use clap::{Parser, Subcommand};
 mod data;
 use data::{RULES_DIR, DEFAULT_RULES};
 mod models;
-use models::ruleset::Ruleset;
+use models::Ruleset;
 
 /// cli for the application
 #[derive(Parser)]
