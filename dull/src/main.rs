@@ -40,6 +40,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     match cli.command {
         Commands::Check { path, exclude, select, extend_select, ignore } => {
+            // error as quick as possible if the target directory / file doesnt exist
             if !path.exists() {
                 eprintln!("Error: Path '{}' does not exist", path.display());
                 std::process::exit(1);
