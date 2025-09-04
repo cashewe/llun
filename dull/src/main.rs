@@ -7,6 +7,8 @@ use clap::{Parser, Subcommand};
 
 mod data;
 use data::{RULES_DIR, DEFAULT_RULES};
+mod models;
+use models::ruleset::Ruleset;
 
 /// cli for the application
 #[derive(Parser)]
@@ -59,12 +61,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
 
-            let filtered_selected_rules: Vec<&String> = selected_rules
-                .iter()
+            let filtered_selected_rules: Vec<String> = selected_rules
+                .into_iter()
                 .filter(|rule| !ignore.contains(rule))
                 .collect();
 
             println!("Selected rules: {:?}", filtered_selected_rules);
+            let rules = Ruleset::load_from_json(filtered_selected_rules);
+
+            println!("transformed rules: {:?}", rules);
 
             let files_to_check = collect_files(&path, &exclude_set)?;
             println!("Files to check:");

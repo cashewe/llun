@@ -1,0 +1,5 @@
+{
+    "brief_description": "Open / Closed Principle",
+    "long_description": "Entities should be open to extension but closed to editing, you should be able to add new functionality without altering existing code, often achieved through inheritance or polymorphism.",
+    "example": "Instead of editing an existing class to add behavior, use inheritance or composition to extend it."
+}

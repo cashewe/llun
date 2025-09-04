@@ -1,11 +1,12 @@
-use std::fs;
+use std::fmt;
 
 use serde::{Serialize, Deserialize};
-use data::{RULES_DIR};
+use crate::data::{RULES_DIR};
 
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Rule {
+    #[serde(default)]
     pub rule_code: String,
     pub brief_description: String,
     pub long_description: String,
@@ -15,11 +16,17 @@ pub struct Rule {
 impl Rule {
     /// load rule from a rule json
     pub fn from_file(rule_code: String) -> Result<Self, Box<dyn std::error::Error>> {
-        let file_path = RULES_DIR.as_ref().join(format!("{}.json", rule_code));
-        let content = fs::read_to_string(&file_path)?;
+        let filename = format!("{}.json", rule_code);
+        let file = RULES_DIR
+            .get_file(&filename)
+            .ok_or_else(|| format!("File not found: {}", filename))?;
 
-        let mut rule: Rule = serde_json::from_str(&content)?;
-        rule.code = rule_code
+        let contents = file
+            .contents_utf8()
+            .ok_or_else(|| format!("File not valid UTF-8: {}", filename))?;
+
+        let mut rule: Rule = serde_json::from_str(&contents)?;
+        rule.rule_code = rule_code;
 
         Ok(rule)
     }
