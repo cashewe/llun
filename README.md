@@ -27,9 +27,17 @@ the results of this process so far are in the 'dull/src' directory. dont ask me 
 - rewrite config manager in rust []
 - rewrite openai client in rust []
 - rewrite prompt manager in rust []
+- rewrite rules object in rust [X]
 - rewrite cli in rust [X]
 - wrap rust cli in python forwarding logic []
 - publish to pypi despite the whole cargo crate being rust based []
+
+*NOTES*
+I may want to revisit this heavily as i learn more lol - im fairly sure the passing between borrowed and owned states, results and options etc... is incredibly goofy and the filepath management is likely ass.
+
+i may also want to give more power to the ruleset object - at the minute we spend a while validating and manipulating the names of rules etc... when we probs could be running on raw rule objects instead, which would likely be better.
+
+alternately, maybe we want a rulesloader object that does that? idk...
 
 Phase 3 - beyond MVP
 --------------------
@@ -44,3 +52,17 @@ Phase 3 - beyond MVP
 - write azure pipelines extension []
 - write github actions extension []
 - improve prompt to ensure model outputs are as expected []
+
+## in progress
+
+Currently coming to grips with structs / traits. I think i will likely revisit the structure of the rule_manager to make it more extensible during this process.
+
+once we have the tool able to print the full rule list based on cmd inputs, and the implementation makes sense, I'll start thinking about the config toml reading. the prompt / api calling feature is one ill likely get to last of all as It feels likely to be the most confusing to me (im not sure how auth etc... will work in rust) and that bit needs a pretty hefty redesign to work with more than just openai gpt4-o.
+
+long term, to expand the products feature set out, it may be worth considering:
+
+- a github action
+- an azure devops task
+- an mcp server (so copilot can use it as a reviewer in real time)
+
+these may never come to pass but we'll see.
