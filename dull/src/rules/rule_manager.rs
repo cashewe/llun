@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 use crate::data::{DEFAULT_RULES, RULES_DIR};
-use crate::models::RuleSet;
+use crate::rules::RuleSet;
 
 
 // claude suggested these custom errors

@@ -1,13 +1,12 @@
-use std::path::{PathBuf, Path};
-use std::collections::HashSet;
-use std::fs;
-use std::io;
+use std::path::{PathBuf};
 
 use clap::{Parser, Subcommand};
 
 mod data;
-mod models;
-use models::RuleManager;
+mod rules;
+use rules::RuleManager;
+mod files;
+use files::FileManager;
 
 /// cli for the application
 #[derive(Parser)]
@@ -40,64 +39,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     match cli.command {
         Commands::Check { path, exclude, select, extend_select, ignore } => {
-            // error as quick as possible if the target directory / file doesnt exist
-            if !path.exists() {
-                eprintln!("Error: Path '{}' does not exist", path.display());
-                std::process::exit(1);
-            }
-            let exclude_set: HashSet<PathBuf> = exclude.into_iter().collect();
-
-            let files_to_check = collect_files(&path, &exclude_set)?;
-            println!("Files to check:");
-            for file in &files_to_check {
-                println!("  {}", file.display());
-            }
+            let files = FileManager::load_from_cli(path, exclude)?;
+            println!("selected files: {:?}", files);
 
             let rules = rule_manager.load_from_cli(select, extend_select, ignore)?;
             println!("transformed rules: {:?}", rules);
 
         }
     }
-
-    Ok(())
-}
-
-/// get the selected filepaths
-fn collect_files(
-    path: &Path,
-    exclude_set: &HashSet<PathBuf>
-) -> io::Result<Vec<PathBuf>> {
-    let mut files = Vec::new();
-    collect_files_recursive(path, exclude_set, &mut files)?;
-    Ok(files)
-}
-
-/// recursively update the mutable files param
-fn collect_files_recursive(
-    path: &Path,
-    exclude_set: &HashSet<PathBuf>,
-    files: &mut Vec<PathBuf>
-) -> io::Result<()> {
-    if exclude_set.contains(path) {
-        return Ok(());
-    };
-
-    if path.is_file() {
-        files.push(path.to_path_buf());
-    } else if path.is_dir() {
-        let entries = fs::read_dir(path)?;
-
-        for entry in entries {
-            let entry = entry?;
-            let entry_path = entry.path();
-
-            if exclude_set.contains(&entry_path) {
-                continue;
-            }
-
-            collect_files_recursive(&entry_path, exclude_set, files)?;
-        }
-    }
-
     Ok(())
 }
