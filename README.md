@@ -24,8 +24,9 @@ Phase 2 - rust refactor
 the results of this process so far are in the 'dull/src' directory. dont ask me why i chose to just swap the folder names and act like thats legible. i dont have an answer other than the cargo initialisation did it for me.
 
 - learn basic rust [X]
-- rewrite openai client in rust []
-- rewrite file manager in rust []
+- rewrite openai client in rust [] # https://crates.io/crates/openai-api-rs
+- rewrite prompt manager in rust []
+- rewrite file manager in rust [X]
 - rewrite rules object in rust [X]
 - rewrite cli in rust [X]
 - wrap rust cli in python forwarding logic []
