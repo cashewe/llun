@@ -7,6 +7,8 @@ mod rules;
 use rules::RuleManager;
 mod files;
 use files::FileManager;
+mod api_client;
+use api_client::PromptManager;
 
 /// cli for the application
 #[derive(Parser)]
@@ -40,11 +42,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     match cli.command {
         Commands::Check { path, exclude, select, extend_select, ignore } => {
             let files = FileManager::load_from_cli(path, exclude)?;
-            println!("selected files: {:?}", files);
-
             let rules = rule_manager.load_from_cli(select, extend_select, ignore)?;
-            println!("transformed rules: {:?}", rules);
 
+            let prompt_manager = PromptManager::new(&rules, &files)?;
+            println!("constucted prompts: {:?}", prompt_manager);
         }
     }
     Ok(())
