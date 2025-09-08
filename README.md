@@ -25,7 +25,7 @@ the results of this process so far are in the 'dull/src' directory. dont ask me 
 
 - learn basic rust [X]
 - rewrite openai client in rust [] # https://crates.io/crates/openai-api-rs
-- rewrite prompt manager in rust []
+- rewrite prompt manager in rust [X]
 - rewrite file manager in rust [X]
 - rewrite rules object in rust [X]
 - rewrite cli in rust [X]
@@ -41,28 +41,20 @@ alternately, maybe we want a rulesloader object that does that? idk...
 
 Phase 3 - beyond MVP
 --------------------
-- support nested pyprojects []
-- support dull.toml []
-- unify usage syntax with ruff tbh []
-- support model configurability []
-- support more than just openai models []
-- design and create a more useful output than just json []
-- support junit []
-- write vscode extension []
-- write azure pipelines extension []
-- write github actions extension []
-- write mcp tool []
+The result of this stage will be a delivery ready tool, but still with bare minimum behaviours. Once this is done, the solution is complete, though we can choose to dip in to any of the remaining tasks to add brand new behaviours.
+
 - write filetype limits (i.e. it cant parse pdf etc... unless i build readers for it, so limit it to plaintext filetypes) []
-- write filetype filters []
 - write gitignore support (i.e. if ia file is ignored from git, allow us to ignore it from parsing too) []
 - improve prompt to ensure model outputs are as expected []
 - figure out optimal query to minimise cost as sending the whole repo etc... is likely to be spenny af []
 - write CICD process to build package, and lint the rust code etc... []
 - write unit tests for the relevant behaviours []
+- write full documentation for the tools usage and dependencies etc... []
+- write a full set of initial design principles that may be of use to people (aim for say 20) []
 
 ## in progress
 
-we have the rules / files loading all up and running so really at this point for the mvp we just need the openai model call. im not sure if openai have a rust crate so i may have to rawdog the api.
+we have the rules / files loading all up and forming into prompts so really at this point for the mvp we just need the openai model call. im not sure if openai have a rust crate so i may have to rawdog the api.
 
 the code is pretty poor for the filemanager especially - i think the python prototype was super helpful but has lead to me trying to copy it a bit too closely, and pythons lack of ownership means that that leads to bugs in rust. the result of that is alot of slap dash borrowing, error mapping, etc... equally, the filemanager struct has no attributes at all which makes me think it might benefit from a re-architecting. in the python version, i had no distinction between the manager and the fileset whereas here i copied the rules pattern for consistancy. maybe that was a mistake?
 
