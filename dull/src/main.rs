@@ -8,7 +8,7 @@ use rules::RuleManager;
 mod files;
 use files::FileManager;
 mod api_client;
-use api_client::PromptManager;
+use api_client::{PromptManager, OpenAiPublicClient};
 
 /// cli for the application
 #[derive(Parser)]
@@ -35,9 +35,11 @@ enum Commands {
     },
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
     let rule_manager = RuleManager::new()?;
+    let openai_client = OpenAiPublicClient::new()?;
     
     match cli.command {
         Commands::Check { path, exclude, select, extend_select, ignore } => {
@@ -45,7 +47,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             let rules = rule_manager.load_from_cli(select, extend_select, ignore)?;
 
             let prompt_manager = PromptManager::new(&rules, &files)?;
-            println!("constucted prompts: {:?}", prompt_manager);
+            let model_response = openai_client.scan_files(&prompt_manager.system_prompt, &prompt_manager.user_prompt).await?;
+            println!("{:?}", model_response);
         }
     }
     Ok(())
