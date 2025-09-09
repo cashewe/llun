@@ -17,6 +17,8 @@ pub enum OpenAiClientError{
     ApiRequestFailed(#[from] async_openai::error::OpenAIError),
     #[error("Failed to parse response as JSON: {0}")]
     JsonParseError(#[from] serde_json::Error),
+    #[error("Failed to extract json from response")]
+    JsonCleaningError,
 }
 
 #[derive(Debug, Clone)]
@@ -32,6 +34,20 @@ impl OpenAiPublicClient {
         let client = Client::new();
 
         Ok(Self { client })
+    }
+
+    pub fn extract_json_from_response(content: &str) -> Result<&str, OpenAiClientError> {
+        let start_pos = content.find('{')
+            .ok_or_else(|| OpenAiClientError::JsonCleaningError)?;
+        
+        let end_pos = content.rfind('}')
+            .ok_or_else(|| OpenAiClientError::JsonCleaningError)?;
+        
+        if start_pos >= end_pos {
+            return Err(OpenAiClientError::JsonCleaningError);
+        }
+        
+        Ok(&content[start_pos..=end_pos])
     }
 
     /// get the models response to our lovely prompts
@@ -54,7 +70,8 @@ impl OpenAiPublicClient {
 
         let response = self.client.chat().create(request).await?;
         let content = response.choices.first().and_then(|choice| choice.message.content.as_ref()).ok_or(OpenAiClientError::EmptyResponse)?;
-        let formatted_response: Response = serde_json::from_str(content)?;
+        let cleaned_content = Self::extract_json_from_response(content)?;
+        let formatted_response: Response = serde_json::from_str(cleaned_content)?;
         
         Ok(formatted_response)
     }

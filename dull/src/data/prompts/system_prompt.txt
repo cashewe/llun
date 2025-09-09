@@ -21,4 +21,18 @@ scan the code for violations of the provided strategic rules, keeping the additi
 ```
 {formatted_schema}
 ```
-DO NOT include any free text, and your json response should be in plain json, not json dumped.
+DO NOT include any free text, or wrapping around your json response, it is critical you simply reply with the json object i.e.
+
+"""
+{...}
+"""
+
+NOT
+
+"""
+```json
+{...}
+```
+"""
+
+etc...
