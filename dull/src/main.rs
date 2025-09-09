@@ -48,7 +48,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             let prompt_manager = PromptManager::new(&rules, &files)?;
             let model_response = openai_client.scan_files(&prompt_manager.system_prompt, &prompt_manager.user_prompt).await?;
-            println!("{:?}", model_response);
+            println!("{}", serde_json::to_string_pretty(&model_response)?);
         }
     }
     Ok(())
