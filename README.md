@@ -24,7 +24,7 @@ Phase 2 - rust refactor
 the results of this process so far are in the 'dull/src' directory. dont ask me why i chose to just swap the folder names and act like thats legible. i dont have an answer other than the cargo initialisation did it for me.
 
 - learn basic rust [X]
-- rewrite openai client in rust [] # https://crates.io/crates/openai-api-rs
+- rewrite openai client in rust [X]
 - rewrite prompt manager in rust [X]
 - rewrite file manager in rust [X]
 - rewrite rules object in rust [X]
@@ -54,8 +54,10 @@ The result of this stage will be a delivery ready tool, but still with bare mini
 
 ## in progress
 
-we have the rules / files loading all up and forming into prompts so really at this point for the mvp we just need the openai model call. im not sure if openai have a rust crate so i may have to rawdog the api.
-
 the code is pretty poor for the filemanager especially - i think the python prototype was super helpful but has lead to me trying to copy it a bit too closely, and pythons lack of ownership means that that leads to bugs in rust. the result of that is alot of slap dash borrowing, error mapping, etc... equally, the filemanager struct has no attributes at all which makes me think it might benefit from a re-architecting. in the python version, i had no distinction between the manager and the fileset whereas here i copied the rules pattern for consistancy. maybe that was a mistake?
 
 I think I'll get MVP up and running this week, and then loop round to better error handling etc... after the fact. id imagine the code with all its loops etc... is slower than it needs to be too which may as well try to keep it fast given thats one of the big selling points of rust.
+
+quick and dirty v1 seems achievable fairly quickly, i simply need to figure out a way to build and deploy the solution, and will need to write some fleshed out docs.
+after that itll just be feature additions!
+how exciting...
