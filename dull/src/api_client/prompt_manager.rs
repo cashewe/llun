@@ -2,10 +2,12 @@ use std::fmt;
 
 use serde_json;
 use serde::{Serialize, Deserialize};
+use schemars::schema_for;
 
 use crate::rules::{RuleSet};
 use crate::files::{FileSet};
 use crate::data::{PROMPT_DIR};
+use crate::api_client::Response;
 
 /// errors that can occur in the prompt manager
 #[derive(Debug, thiserror::Error)]
@@ -45,13 +47,7 @@ impl PromptManager {
 
     /// load in and format the system prompt
     pub fn load_system_prompt() -> Result<String, PromptManagerError> {
-        let schema_string = PROMPT_DIR
-            .get_file("response_schema.json")
-            .ok_or_else(|| PromptManagerError::FileNotFound("response_schema.json".to_string()))?
-            .contents_utf8()
-            .ok_or_else(|| PromptManagerError::InvalidUtf8("response_schema.json".to_string()))?;
-
-        let schema: serde_json::Value = serde_json::from_str(schema_string)?;
+        let schema = schema_for!(Response);
         let formatted_schema = serde_json::to_string_pretty(&schema)?;
 
         let prompt_template = PROMPT_DIR
