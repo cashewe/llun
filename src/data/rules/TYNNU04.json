@@ -1,0 +1,5 @@
+{
+    "brief_description": "Interface Segregation Principle",
+    "long_description": "Clients should not be forced to depend on methods they do not use.",
+    "example": "Instead of one large interface 'Machine' with print(), scan(), fax(), create smaller interfaces like Printer, Scanner, Fax."
+}

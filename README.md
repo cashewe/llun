@@ -46,6 +46,8 @@ The result of this stage will be a delivery ready tool, but still with bare mini
 - write filetype limits (i.e. it cant parse pdf etc... unless i build readers for it, so limit it to plaintext filetypes) []
 - write gitignore support (i.e. if ia file is ignored from git, allow us to ignore it from parsing too) []
 - improve prompt to ensure model outputs are as expected []
+- write pyproject support []
+- format output into a stackheap []
 - figure out optimal query to minimise cost as sending the whole repo etc... is likely to be spenny af []
 - write CICD process to build package, and lint the rust code etc... []
 - write unit tests for the relevant behaviours []
@@ -61,3 +63,10 @@ I think I'll get MVP up and running this week, and then loop round to better err
 quick and dirty v1 seems achievable fairly quickly, i simply need to figure out a way to build and deploy the solution, and will need to write some fleshed out docs.
 after that itll just be feature additions!
 how exciting...
+
+## build guide
+
+1. `source .venv/bin/activate`
+2. `uv pip install maturin twine`
+3. `maturin develop`
+4. `uv run tynnu --help`
