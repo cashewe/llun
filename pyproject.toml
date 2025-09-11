@@ -34,12 +34,11 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Quality Assurance",
 ]
-
-[project.scripts]
-tynnu = "tynnu.cli:main"
+dependencies = [
+    "maturin>=1.9.4",
+    "twine>=6.2.0",
+]
 
 [tool.maturin]
-manifest-path = "Cargo.toml"
-module-name = "tynnu"
-python-source = "python"
+bindings = "bin"
 strip = true

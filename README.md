@@ -29,7 +29,7 @@ the results of this process so far are in the 'dull/src' directory. dont ask me 
 - rewrite file manager in rust [X]
 - rewrite rules object in rust [X]
 - rewrite cli in rust [X]
-- wrap rust cli in python forwarding logic []
+- wrap rust cli in python forwarding logic [X]
 - publish to pypi despite the whole cargo crate being rust based []
 
 *NOTES*
