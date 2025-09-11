@@ -1,5 +1,11 @@
 {
-    "brief_description": "Open / Closed Principle",
-    "long_description": "Entities should be open to extension but closed to editing, you should be able to add new functionality without altering existing code, often achieved through inheritance or polymorphism.",
-    "example": "Instead of editing an existing class to add behavior, use inheritance or composition to extend it."
+  "name": "Open/Closed Principle",
+  "description": "Software entities should be open for extension but closed for modification.",
+  "risk_if_violated": "When adding new features requires modifying existing code, you risk introducing regressions and breaking existing functionality.",
+  "examples": [
+    {
+      "violation": "A switch statement that must be updated whenever a new payment type is added.",
+      "better": "Define a common interface for payment processors and add new implementations without modifying existing code."
+    }
+  ]
 }

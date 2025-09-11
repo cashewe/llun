@@ -2,7 +2,7 @@ The rules you should use for your analysis are as follows:
 ```
 {rules}
 ```
-the code for you to scan for violations is provided bellow:
+the iles for you to eview for violations is provided bellow:
 ```
 {files}
 ```

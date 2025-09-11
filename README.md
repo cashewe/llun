@@ -30,6 +30,9 @@ the results of this process so far are in the 'dull/src' directory. dont ask me 
 - rewrite rules object in rust [X]
 - rewrite cli in rust [X]
 - wrap rust cli in python forwarding logic [X]
+- write pyproject support [X]
+- implement gitignore support [X]
+- write full documentation for the tools usage and dependencies etc... []
 - publish to pypi despite the whole cargo crate being rust based []
 
 *NOTES*
@@ -44,15 +47,13 @@ Phase 3 - beyond MVP
 The result of this stage will be a delivery ready tool, but still with bare minimum behaviours. Once this is done, the solution is complete, though we can choose to dip in to any of the remaining tasks to add brand new behaviours.
 
 - write filetype limits (i.e. it cant parse pdf etc... unless i build readers for it, so limit it to plaintext filetypes) []
-- write gitignore support (i.e. if ia file is ignored from git, allow us to ignore it from parsing too) []
 - improve prompt to ensure model outputs are as expected []
-- write pyproject support []
 - format output into a stackheap []
 - figure out optimal query to minimise cost as sending the whole repo etc... is likely to be spenny af []
 - write CICD process to build package, and lint the rust code etc... []
 - write unit tests for the relevant behaviours []
-- write full documentation for the tools usage and dependencies etc... []
 - write a full set of initial design principles that may be of use to people (aim for say 20) []
+- write alternate model source (azure openai is the obvious one, maybe claude too?)
 
 ## in progress
 
@@ -69,4 +70,4 @@ how exciting...
 1. `source .venv/bin/activate`
 2. `uv pip install maturin twine`
 3. `maturin develop`
-4. `uv run tynnu --help`
+4. `uv run llun --help`

@@ -5,12 +5,19 @@ use crate::data::{RULES_DIR};
 
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RuleExample {
+    pub violation: String,
+    pub better: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Rule {
-    #[serde(default)]
     pub rule_code: String,
-    pub brief_description: String,
-    pub long_description: String,
-    pub example: String,
+    pub name: String,
+    pub description: String,
+    pub risk_if_violated: String,
+    #[serde(default)]
+    pub examples: Vec<RuleExample>,
 }
 
 impl Rule {
@@ -34,10 +41,12 @@ impl Rule {
 
 impl fmt::Display for Rule {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "## {} - {}\n*{}*\n**Example**: {}",
-            self.rule_code, self.brief_description, self.long_description, self.example
-        )
+        writeln!(f, "## {} - {}", self.rule_code, self.name)?;
+        writeln!(f, "*{}*", self.description)?;
+        writeln!(f, "**Risk if violated:** {}", self.risk_if_violated)?;
+        for example in &self.examples {
+            writeln!(f, "- Violation: {}\n  Better: {}", example.violation, example.better)?;
+        }
+        Ok(())
     }
 }

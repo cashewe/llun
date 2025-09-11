@@ -56,8 +56,14 @@ pub struct Args {
     #[arg(short = 'M', long, default_value = "gpt-4o")]
     #[serde(default)]
     model: String,
+
+    /// default ignore all files in the gitignore, to avoid leaking secrets etc...
+    #[arg(short, long, action = clap::ArgAction::SetTrue)]
+    #[serde(default)]
+    no_respect_gitignore: bool,
 }
 
+#[allow(dead_code)]  // the codes not dead, just uncalled in the repo
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
@@ -73,7 +79,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .select("tool.llun")
                 .extract()?;
 
-            let files = FileManager::load_from_cli(config.path, config.exclude)?;
+            let files = FileManager::load_from_cli(config.path, config.exclude, config.no_respect_gitignore)?;
             let rules = rule_manager.load_from_cli(config.select, config.extend_select, config.ignore)?;
 
             let prompt_manager = PromptManager::new(&rules, &files)?;
