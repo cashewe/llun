@@ -1,5 +1,0 @@
-{
-    "brief_description": "Composition Over Inheritance",
-    "long_description": "Favor assembling behavior using contained objects rather than rigid class hierarchies. This keeps systems flexible and avoids fragile base class problems.",
-    "example": "Instead of making a FlyingCar subclass of Car, give a Car object a FlightModule that can be swapped or removed."
-}

@@ -1,5 +1,0 @@
-{
-    "brief_description": "Law of Demeter (LoD)",
-    "long_description": "A module should only talk to its immediate collaborators and not chain through multiple objects. Minimize knowledge of internal object structures.",
-    "example": "Instead of calling order.getCustomer().getAddress().getZipCode(), add order.getShippingZipCode() to prevent deep navigation."
-}

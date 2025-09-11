@@ -1,5 +1,0 @@
-  {
-    "brief_description": "Domain-Driven Design (DDD)",
-    "long_description": "Design should be centered around the core domain and domain logic. Emphasise the use of a shared ubiquitous language, and clear boundaries between different subdomains through bounded contexts.",
-    "example": "When building an online store, instead of modeling generic 'data tables,' you model concepts like 'Order,' 'Product,' and 'Payment' as rich domain objects with their own rules and behaviors."
-  }

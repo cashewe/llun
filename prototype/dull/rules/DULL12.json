@@ -1,5 +1,0 @@
-{
-    "brief_description": "Single Level of Abstraction Principle (SLAP)",
-    "long_description": "Each function or method should operate at a single conceptual level. Avoid mixing high-level logic with low-level details in the same block.",
-    "example": "A function deciding which files to back up should not also contain raw disk I/O calls — delegate that to helper functions."
-}

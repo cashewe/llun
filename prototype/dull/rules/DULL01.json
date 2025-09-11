@@ -1,5 +1,0 @@
-{
-    "brief_description": "Don't Repeat Yourself (DRY)",
-    "long_description": "Avoid code duplication. Extract common functionality into reusable functions or classes. This should be applied with understanding that boolean traps etc... are not to be encouraged.",
-    "example": "Instead of copying similar functions, create a generic function with parameters."
-}

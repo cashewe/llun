@@ -59,7 +59,6 @@ impl OpenAiPublicClient {
     /// taken from https://github.com/64bit/async-openai/blob/main/examples/chat/src/main.rs
     pub async fn scan_files(&self, system_prompt: &String, user_prompt: &String, model: String) -> Result<Response, OpenAiClientError> {
         let request = CreateChatCompletionRequestArgs::default()
-            .max_completion_tokens(1024u32)
             .model(model)
             .messages([
                 ChatCompletionRequestSystemMessageArgs::default()
