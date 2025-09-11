@@ -1,5 +1,0 @@
-{
-    "brief_description": "Single Responsibility Principle",
-    "long_description": "Each function or class should have one reason to change and one responsibility.",
-    "example": "A function that both validates data AND saves to database violates SRP - split into two functions."
-}
