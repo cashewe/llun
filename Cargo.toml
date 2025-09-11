@@ -1,14 +1,14 @@
 [package]
-name = "tynnu"
+name = "llun"
 version = "1.0.0"
 edition = "2024"
 
 [[bin]]
-name = "tynnu"
+name = "llun"
 path = "src/main.rs"
 
 [lib]
-name = "tynnu"
+name = "llun"
 crate-type = ["cdylib", "rlib"]
 path = "src/main.rs" 
 
@@ -21,11 +21,8 @@ thiserror = "2.0.16"
 schemars = "1.0.4"
 async-openai = "0.29.3"
 tokio = { version = "1.47.1", features = ["rt-multi-thread", "macros"] }
-pyo3 = { version = "0.26.0", features = ["extension-module"] }
-
-[build-dependencies]
-pyo3-build-config = "0.26.0"
+figment = { version = "0.10.19", features = ["toml"] }
 
 [tool.maturin]
 python-source = "python"
-module-name = "tynnu.tynnu"
+module-name = "llun.llun"

@@ -3,7 +3,7 @@ requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 
 [project]
-name = "tynnu"
+name = "llun"
 dynamic = ["version"]
 description = "A linter for architecture and abstraction"
 authors = [{ name = "John C Ll Stokes", email = "johnclstokes@hotmail.com" }]

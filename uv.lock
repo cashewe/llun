@@ -304,6 +304,20 @@ wheels = [
 ]
 
 [[package]]
+name = "llun"
+source = { editable = "." }
+dependencies = [
+    { name = "maturin" },
+    { name = "twine" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "maturin", specifier = ">=1.9.4" },
+    { name = "twine", specifier = ">=6.2.0" },
+]
+
+[[package]]
 name = "markdown-it-py"
 version = "3.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -598,20 +612,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e0/a8/949edebe3a82774c1ec34f637f5dd82d1cf22c25e963b7d63771083bbee5/twine-6.2.0.tar.gz", hash = "sha256:e5ed0d2fd70c9959770dce51c8f39c8945c574e18173a7b81802dab51b4b75cf", size = 172262, upload-time = "2025-09-04T15:43:17.255Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3a/7a/882d99539b19b1490cac5d77c67338d126e4122c8276bf640e411650c830/twine-6.2.0-py3-none-any.whl", hash = "sha256:418ebf08ccda9a8caaebe414433b0ba5e25eb5e4a927667122fbe8f829f985d8", size = 42727, upload-time = "2025-09-04T15:43:15.994Z" },
-]
-
-[[package]]
-name = "tynnu"
-source = { editable = "." }
-dependencies = [
-    { name = "maturin" },
-    { name = "twine" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "maturin", specifier = ">=1.9.4" },
-    { name = "twine", specifier = ">=6.2.0" },
 ]
 
 [[package]]
