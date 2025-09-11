@@ -12,6 +12,7 @@ pub struct RuleExample {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Rule {
+    #[serde(skip)]
     pub rule_code: String,
     pub name: String,
     pub description: String,

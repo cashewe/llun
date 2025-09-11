@@ -32,28 +32,26 @@ the results of this process so far are in the 'dull/src' directory. dont ask me 
 - wrap rust cli in python forwarding logic [X]
 - write pyproject support [X]
 - implement gitignore support [X]
-- write full documentation for the tools usage and dependencies etc... []
+- tweak the prompt, rule structure etc... until it responds reliably with useful tips [X]
+- write new readme for package, including cool emblem []
+- write contribution guide []
+- paste an actual license []
+- write a changelog []
 - publish to pypi despite the whole cargo crate being rust based []
-
-*NOTES*
-I may want to revisit this heavily as i learn more lol - im fairly sure the passing between borrowed and owned states, results and options etc... is incredibly goofy and the filepath management is likely ass.
-
-i may also want to give more power to the ruleset object - at the minute we spend a while validating and manipulating the names of rules etc... when we probs could be running on raw rule objects instead, which would likely be better.
-
-alternately, maybe we want a rulesloader object that does that? idk...
 
 Phase 3 - beyond MVP
 --------------------
 The result of this stage will be a delivery ready tool, but still with bare minimum behaviours. Once this is done, the solution is complete, though we can choose to dip in to any of the remaining tasks to add brand new behaviours.
 
 - write filetype limits (i.e. it cant parse pdf etc... unless i build readers for it, so limit it to plaintext filetypes) []
-- improve prompt to ensure model outputs are as expected []
-- format output into a stackheap []
-- figure out optimal query to minimise cost as sending the whole repo etc... is likely to be spenny af []
+- define output formats []
 - write CICD process to build package, and lint the rust code etc... []
 - write unit tests for the relevant behaviours []
 - write a full set of initial design principles that may be of use to people (aim for say 20) []
-- write alternate model source (azure openai is the obvious one, maybe claude too?)
+- write alternate model source (azure openai is the obvious one, maybe claude too?) []
+- write default values into a toml, rather than a quirky text file []
+- allow custom written rules []
+- allow custom 'context' to be inserted into the prompt such as the tools name and one line description, or the commit / pr description etc... []
 
 ## in progress
 
@@ -71,3 +69,5 @@ how exciting...
 2. `uv pip install maturin twine`
 3. `maturin develop`
 4. `uv run llun --help`
+
+*note* for reasons not yet clear to me, maturin doesnt seem to consistantly install the newest version of the codebase when running maturin develop. you may have some luck by fully wiping the venv and installing llun from wheel? alternately its fairly straight forwards to instead test code changes using `cargo run check ...`.
