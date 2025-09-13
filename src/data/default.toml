@@ -1,0 +1,8 @@
+select = [
+    "LLUN01",
+    "LLUN02",
+    "LLUN03",
+    "LLUN04",
+    "LLUN05"
+]
+model = "gpt-4o"

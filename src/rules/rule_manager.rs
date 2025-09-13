@@ -1,5 +1,5 @@
 use std::collections::HashSet;
-use crate::data::{DEFAULT_RULES, RULES_DIR};
+use crate::data::{RULES_DIR};
 use crate::rules::RuleSet;
 
 
@@ -26,21 +26,18 @@ pub struct RuleSelectionConfig {
 
 #[derive(Debug, Default)]
 pub struct RuleManager {
-    default_rules: &'static str,  // do we reall benefit from storing this all considered?
     valid_rules: HashSet<String>,
 }
 
 impl RuleManager {
     pub fn new() -> Result<Self, RuleManagerError> {
         let valid_rules = Self::get_valid_rules()?;
-        let default_rules = DEFAULT_RULES;
 
         if valid_rules.is_empty() {
             return Err(RuleManagerError::NoRulesAvailable);
         }
 
         Ok(Self {
-            default_rules,
             valid_rules,
         })
     }
@@ -68,28 +65,9 @@ impl RuleManager {
         Ok(valid_rules)
     }
 
-    // load the default rules in from the txt file
-    pub fn get_default_rules(&self) -> Result<Vec<String>, RuleManagerError> {
-        let default_rules: Vec<String> = self.default_rules
-            .lines()
-            .map(|line| line.trim().to_string())
-            .filter(|line| !line.is_empty())
-            .collect();
-
-        if default_rules.is_empty() {
-            return Err(RuleManagerError::DefaultRulesError("No default rules in file.".to_string()))
-        }
-        
-        Ok(default_rules)
-    }
-
     /// get the final list of selected rules based on the inputs in the config
     pub fn finalise_selected_rules(&self, config: &RuleSelectionConfig) -> Result<Vec<String>, RuleManagerError> {
-        let mut selected_rules = if config.select.is_empty() {
-            self.get_default_rules()?
-        } else {
-            config.select.clone()
-        };  // if select is a list with at least one value, use it, else default back
+        let mut selected_rules = config.select.clone();
         selected_rules.extend(config.extend_select.clone());
 
         for rule in &selected_rules {
