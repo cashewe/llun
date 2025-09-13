@@ -1,0 +1,11 @@
+{
+  "name": "Test behaviour, not implementation",
+  "description": "Write tests that verify the system's externally visible behavior rather than its internal implementation details.",
+  "risk_if_violated": "If you test implementation details, refactoring the code will break tests even though the behavior is unchanged. This leads to brittle tests, wasted time fixing them, and resistance to improving the codebase. It can also create a false sense of security if tests pass while the actual behavior is incorrect.",
+  "examples": [
+    {
+      "violation": "A unit test checks that a class uses a specific private helper function or relies on a particular algorithm rather than just confirming the expected output for given inputs.",
+      "better": "A test asserts that, given a certain input, the public API returns the correct result, regardless of how it is implemented internally."
+    }
+  ]
+}

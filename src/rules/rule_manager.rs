@@ -33,10 +33,6 @@ impl RuleManager {
     pub fn new() -> Result<Self, RuleManagerError> {
         let valid_rules = Self::get_valid_rules()?;
 
-        if valid_rules.is_empty() {
-            return Err(RuleManagerError::NoRulesAvailable);
-        }
-
         Ok(Self {
             valid_rules,
         })
@@ -101,6 +97,4 @@ impl RuleManager {
 
         Ok(self.load_ruleset(&config)?)
     }
-
-    // we will eventually need to extend this object to also load from toml, and a hybrid of cli and toml... itll get phat.
 }

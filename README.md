@@ -1,8 +1,5 @@
-# Dull
-
-The Dull tool will make use of LLMs to create a 'strategic linter' - a tool which can be used to help guide a unified view of technical strategy within a team, despite 'strategy' being something which cannot be boolean identified via a traditional linter. It'll do this by allowing users to select a number of configurable 'rules' to enforce upon their code such as 'single use principle' etc... and then the tool will raise its concerns to the user in hopefully readable ways.
-
-The target audience would be companies looking to super charge their python use without experienced staff engineers on hand to review every PR etc...
+ Llun - The Architectural 'Linter'
+ 
 
 ## TODO:
 
@@ -49,7 +46,6 @@ The result of this stage will be a delivery ready tool, but still with bare mini
 - write CICD process to build package, and lint the rust code etc... []
 - write unit tests for the relevant behaviours []
 - write alternate model source (azure openai is the obvious one, maybe claude too?) []
-- write default values into a toml, rather than a quirky text file []
 - allow custom written rules []
 - allow custom 'context' to be inserted into the prompt such as the tools name and one line description, or the commit / pr description etc... []
 

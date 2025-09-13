@@ -7,11 +7,13 @@ pub mod data;
 pub mod rules;
 pub mod files;
 pub mod api_client;
+pub mod output_formatter;
 
 pub use data::DEFAULT_CONFIG;
 pub use rules::RuleManager;
 pub use files::FileManager;
 pub use api_client::{PromptManager, OpenAiPublicClient};
+pub use output_formatter::OutputFormat;
 
 /// CLI for the application
 #[derive(Parser)]
@@ -66,6 +68,11 @@ pub struct Args {
     #[arg(short, long, action = clap::ArgAction::SetTrue)]
     #[serde(default)]
     no_respect_gitignore: bool,
+
+    /// type of output to give
+    #[arg(short, long)]
+    #[serde(default)]
+    output_format: Vec<OutputFormat>,
 }
 
 #[allow(dead_code)]  // the codes not dead, just uncalled in the repo
