@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use anyhow::Result;
 use crate::output_formatter::{OutputFormat, OutputFormatter};
 use crate::api_client::Response;
-use crate::output_formatter::{JsonFormatter, JunitFormatter, AzureFormatter, StackTraceFormatter};
+use crate::output_formatter::{JsonFormatter, AzureFormatter};
 
 pub struct OutputManager {
     formatters: HashMap<OutputFormat, Box<dyn OutputFormatter>>,
