@@ -13,7 +13,7 @@ pub use data::DEFAULT_CONFIG;
 pub use rules::RuleManager;
 pub use files::FileManager;
 pub use api_client::{PromptManager, OpenAiPublicClient};
-pub use output_formatter::OutputFormat;
+pub use output_formatter::{OutputFormat, OutputManager};
 
 /// CLI for the application
 #[derive(Parser)]
@@ -81,6 +81,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
     let rule_manager = RuleManager::new()?;
     let openai_client = OpenAiPublicClient::new()?;
+    let output_manager = OutputManager::new();
     
     match cli.command {
         Commands::Check(cli_args) => {
@@ -97,7 +98,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             let prompt_manager = PromptManager::new(&rules, &files)?;
             let model_response = openai_client.scan_files(&prompt_manager.system_prompt, &prompt_manager.user_prompt, config.model.expect("A model must be provided")).await?;
-            println!("{}", serde_json::to_string_pretty(&model_response)?);
+            
+            output_manager.process_response(&model_response, &config.output_format)?
         }
     }
     Ok(())
