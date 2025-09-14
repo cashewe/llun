@@ -16,9 +16,7 @@ impl OutputManager {
         let mut formatters: HashMap<OutputFormat, Box<dyn OutputFormatter>> = HashMap::new();
 
         formatters.insert(OutputFormat::Json, Box::new(JsonFormatter));
-        formatters.insert(OutputFormat::StackTrace, Box::new(StackTraceFormatter));
         formatters.insert(OutputFormat::Azure, Box::new(AzureFormatter));
-        formatters.insert(OutputFormat::Junit, Box::new(JunitFormatter));
 
         Self{ formatters}
     }

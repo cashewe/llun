@@ -31,11 +31,14 @@ the results of this process so far are in the 'dull/src' directory. dont ask me 
 - implement gitignore support [X]
 - tweak the prompt, rule structure etc... until it responds reliably with useful tips [X]
 - write a full set of initial design principles that may be of use to people (aim for say 20) [X]
+- support multiple output formats [X]
 - write new readme for package, including cool emblem []
 - write contribution guide []
 - paste an actual license []
 - write a changelog []
 - publish to pypi despite the whole cargo crate being rust based []
+
+need to find the motivation to actually write some docs instead of just playing with code non stop looooool
 
 Phase 3 - beyond MVP
 --------------------
