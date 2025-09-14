@@ -3,12 +3,12 @@ use serde::{Serialize, Deserialize};
 use crate::api_client::Response;
 
 /// acceptable output types (user controlled)
-#[derive(Debug, Clone, Copy, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, Hash, Serialize, Deserialize, Eq, PartialEq)]
 pub enum OutputFormat {
     Json,
     StackTrace,
-    AzureDevOps,
-    JUnit,
+    Azure,
+    Junit,
 }
 
 /// convert arbitrary string to enum
@@ -19,8 +19,8 @@ impl std::str::FromStr for OutputFormat {
         match s.to_lowercase().as_str() {
             "json" => Ok(OutputFormat::Json),
             "stacktrace" => Ok(OutputFormat::StackTrace),
-            "azure" => Ok(OutputFormat::AzureDevOps),
-            "junit" => Ok(OutputFormat::JUnit),
+            "azure" => Ok(OutputFormat::Azure),
+            "junit" => Ok(OutputFormat::Junit),
             _ => Err(format!("Unknown output format: {}", s)),
         }
     }
@@ -29,5 +29,5 @@ impl std::str::FromStr for OutputFormat {
 pub trait OutputFormatter {
     /// anything which can format is a formatter
     /// does this belong elsewhere? not sure on the organisation atm...
-    fn format(&self, response: &Response) -> Result<String, >;
+    fn format(&self, response: &Response) -> Result<String>;
 }
