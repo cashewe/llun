@@ -6,5 +6,7 @@ select = [
     "LLUN05"
 ]
 model = "gpt-4o"
-output-format = ["json"]
+output_format = [
+    "json"
+]
 provider = "openaipublic"
