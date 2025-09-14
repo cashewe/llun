@@ -27,7 +27,7 @@ impl OutputManager {
     pub fn process_response(&self, response: &Response, output_formats: &Vec<OutputFormat>) -> Result<()> {
         output_formats
             .iter()
-            .filter_map(|format| self.formatters.get(format).map(|formatter| (formatter)))
+            .filter_map(|format| self.formatters.get(format).map(|formatter| formatter))
             .try_for_each(|formatter| -> Result<()> {
                 Ok(println!("{}", formatter.format(response)?))
             })?;

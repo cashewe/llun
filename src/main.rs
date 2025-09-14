@@ -71,7 +71,7 @@ pub struct Args {
 
     /// type of output to give
     #[arg(short, long)]
-    #[serde(default)]
+    #[serde(default, alias = "output-format", skip_serializing_if = "Vec::is_empty")]
     output_format: Vec<OutputFormat>,
 }
 

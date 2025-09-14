@@ -4,6 +4,7 @@ use crate::api_client::Response;
 
 /// acceptable output types (user controlled)
 #[derive(Debug, Clone, Copy, Hash, Serialize, Deserialize, Eq, PartialEq)]
+#[serde(rename_all = "lowercase")]
 pub enum OutputFormat {
     Json,
     StackTrace,
