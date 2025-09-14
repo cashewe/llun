@@ -6,7 +6,7 @@ pub struct AzureFormatter;
 
 /// make use of the output formatter abstraction
 impl OutputFormatter for AzureFormatter {
-fn format(&self, response: &Response) -> Result<String> {
+    fn format(&self, response: &Response) -> Result<String> {
         if response.detected_issues.is_empty() {
             return Ok("##[section]No architecture issues detected".to_string());
         }

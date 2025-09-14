@@ -12,7 +12,7 @@ pub mod output_formatter;
 pub use data::DEFAULT_CONFIG;
 pub use rules::RuleManager;
 pub use files::FileManager;
-pub use api_client::{PromptManager, OpenAiPublicClient};
+pub use api_client::{PromptManager, ScannerManager, AvailableScanner};
 pub use output_formatter::{OutputFormat, OutputManager};
 
 /// CLI for the application
@@ -73,6 +73,11 @@ pub struct Args {
     #[arg(short, long)]
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     output_format: Vec<OutputFormat>,
+
+    /// llm provider
+    #[arg(short, long)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    provider: Option<AvailableScanner>,
 }
 
 #[allow(dead_code)]  // the codes not dead, just uncalled in the repo
@@ -80,7 +85,7 @@ pub struct Args {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
     let rule_manager = RuleManager::new()?;
-    let openai_client = OpenAiPublicClient::new()?;
+    let scanner_manager = ScannerManager::new()?;
     let output_manager = OutputManager::new();
     
     match cli.command {
@@ -97,7 +102,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let rules = rule_manager.load_from_cli(config.select, config.extend_select, config.ignore)?;
 
             let prompt_manager = PromptManager::new(&rules, &files)?;
-            let model_response = openai_client.scan_files(&prompt_manager.system_prompt, &prompt_manager.user_prompt, config.model.expect("A model must be provided")).await?;
+            let model_response = scanner_manager.run_scan(&prompt_manager.system_prompt, &prompt_manager.user_prompt, config.model.expect("A model must be provided"), config.provider.expect("A provider must be provided.")).await?;
             
             output_manager.process_response(&model_response, &config.output_format)?
         }

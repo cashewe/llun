@@ -1,6 +1,5 @@
 use anyhow::Result;
 use serde::{Serialize, Deserialize};
-use crate::api_client::Response;
 
 /// acceptable output types (user controlled)
 #[derive(Debug, Clone, Copy, Hash, Serialize, Deserialize, Eq, PartialEq)]
@@ -21,10 +20,4 @@ impl std::str::FromStr for OutputFormat {
             _ => Err(format!("Unknown output format: {}", s)),
         }
     }
-}
-
-pub trait OutputFormatter {
-    /// anything which can format is a formatter
-    /// does this belong elsewhere? not sure on the organisation atm...
-    fn format(&self, response: &Response) -> Result<String>;
 }
