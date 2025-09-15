@@ -27,11 +27,6 @@ To me, im not sure this offers great learning opportunity - though it may be wor
 
 Zero learning opportunity whatsoever, but pre-commit is pretty popular and its an easy synergy.
 
-### Toml Configurations
-
-The initial release is going to just be configurable via typing commands into cmd, itd be good to be able to configure it first via proprietry toml and then via pyproject.toml
-this will also give me the chance to explore how best to design for multiple input types, which isnt as valuable as new technology but feels like an intersting architectural challenge ive not really faced before.
-
 ## Other Output Types
 
 At the minute, the sole output is json trace. this is *fine* and works well as a building block for other tools, but it doesnt feel as user friendly as it could be. it would be good to consider what alternatives might be possible...
@@ -54,11 +49,7 @@ If this tool is run in CICD, having a formatted summary that those pipeline tool
 
 ## Further CMD commands
 
-In the name of YAGNI, the product will release with the bare minimum collection of commands. There are bound to be further QoL commands that could be added to make the tool easier to use.
-
-### respect gitignore
-
-setting this boolean true could allow the tool to default ignore any file in the gitignore, thus helping avoid sending secrets.txt or whatever to a public endpoint. This is an essential feature tbh...
+In the name of YAGNI, the product will release with the bare minimum collection of commands. There are bound to be further QoL commands that could be added to make the tool easier to use. for instance if we support custom rules, then allowing users to store them in a specific folder would be good. could llun generate the structure for them with a command? could it generate the rules for them via LLM just because?
 
 ### some kind of extension filter
 
@@ -75,10 +66,6 @@ obvious
 obvious
 
 ### have rule families and allow users to select whole families at once
-
-obvious
-
-### support nested pyproject.toml structures
 
 obvious
 

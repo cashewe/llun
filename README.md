@@ -1,72 +1,161 @@
- Llun - The Architectural 'Linter'
+# Llun - The Architectural 'Linter'
  
+## Intro
 
-## TODO:
+Llun ([pronounced '/ɬiːn/'](https://www.howtopronounce.com/welsh/llun), meaning 'picture' (as in **big**)) brings architectural principles directly into your development workflow through a familiar command-line interface. Unlike traditional linters that focus on syntax and style, Llun evaluates your code against configurable architectural rules — ensuring consistency in design patterns, dependency management, and structural decisions across your entire codebase. By leveraging the power of rust, Llun offers a reliable, high performance and type-safe solution to your teams architectural CI/CD needs.
 
-I've broken the roadmap down into three phases:
+## Why Llun?
 
-1. - MVP: this is focused on getting the simplest possible python product working and building as a package. It should act to prove the concept will work
-2. - rust refactor: here, i will rewrite the python modules into rust as a means of getting to know the language. for this phase i will allow the use of llm support to answer linguistic questions but will try to avoid leaning on it too hard as i want to actually learn rust. this may therefore take some time and come out pants
-3. - beyond MVP: adding additional features and integrations to flesh the product out a bit. it would be nice to get some cool features in during this phase
+Modern development teams face a challenge: how to maintain architectural consistency while leveraging LLM-generated code and supporting developers with varying levels of experience. Traditional code reviews catch surface-level issues but often miss deeper architectural concerns. Raw LLM feedback is inconsistent and context-dependent.
+Llun bridges this gap by providing:
 
-In the name of getting something out the door, I'd like v1.0.0 to hit pypi within an arbitrary 2 months. this should allow time to convert to rust and get a reasonably stable MVP working in that language, but we may need to reassess if that language becomes harder to figure out than expected
+- Consistent architectural guidance that goes beyond syntax checking
+- Configurable rules tailored to your team's architectural principles
+- LLM-powered analysis with the reliability of a traditional linter
+- Clear, actionable feedback that helps teams maintain design coherence
 
-Phase 1 - MVP
--------------
-COMPLETE - see src/dull
-this code will remain for refference but will no longer recieve active support.
+Perfect for teams that want to:
 
-Phase 2 - rust refactor
------------------------
-the results of this process so far are in the 'dull/src' directory. dont ask me why i chose to just swap the folder names and act like thats legible. i dont have an answer other than the cargo initialisation did it for me.
+- Ensure high-quality commits from developers at all experience levels
+- Maintain consistency when incorporating LLM-generated code
+- Standardize architectural feedback across code reviews
+- Prefer systematic automation over ad-hoc creative decisions
 
-- learn basic rust [X]
-- rewrite openai client in rust [X]
-- rewrite prompt manager in rust [X]
-- rewrite file manager in rust [X]
-- rewrite rules object in rust [X]
-- rewrite cli in rust [X]
-- wrap rust cli in python forwarding logic [X]
-- write pyproject support [X]
-- implement gitignore support [X]
-- tweak the prompt, rule structure etc... until it responds reliably with useful tips [X]
-- write a full set of initial design principles that may be of use to people (aim for say 20) [X]
-- support multiple output formats [X]
-- write new readme for package, including cool emblem []
-- write contribution guide []
-- paste an actual license []
-- write a changelog []
-- publish to pypi despite the whole cargo crate being rust based []
+## Quick Start
 
-need to find the motivation to actually write some docs instead of just playing with code non stop looooool
+Follow this guide to get up and running ASAP
 
-Phase 3 - beyond MVP
---------------------
-The result of this stage will be a delivery ready tool, but still with bare minimum behaviours. Once this is done, the solution is complete, though we can choose to dip in to any of the remaining tasks to add brand new behaviours.
+### Installation
 
-- write filetype limits (i.e. it cant parse pdf etc... unless i build readers for it, so limit it to plaintext filetypes) []
-- define output formats []
-- write CICD process to build package, and lint the rust code etc... []
-- write unit tests for the relevant behaviours []
-- write alternate model source (azure openai is the obvious one, maybe claude too?) []
-- allow custom written rules []
-- allow custom 'context' to be inserted into the prompt such as the tools name and one line description, or the commit / pr description etc... []
+to use the app, the fastest way is to pip install it into a local environment:
 
-## in progress
+```
+uv pip install llun
+```
 
-the code is pretty poor for the filemanager especially - i think the python prototype was super helpful but has lead to me trying to copy it a bit too closely, and pythons lack of ownership means that that leads to bugs in rust. the result of that is alot of slap dash borrowing, error mapping, etc... equally, the filemanager struct has no attributes at all which makes me think it might benefit from a re-architecting. in the python version, i had no distinction between the manager and the fileset whereas here i copied the rules pattern for consistancy. maybe that was a mistake?
+or for those not yet ready to migrate to uv:
 
-I think I'll get MVP up and running this week, and then loop round to better error handling etc... after the fact. id imagine the code with all its loops etc... is slower than it needs to be too which may as well try to keep it fast given thats one of the big selling points of rust.
+```
+pip install llun
+```
 
-quick and dirty v1 seems achievable fairly quickly, i simply need to figure out a way to build and deploy the solution, and will need to write some fleshed out docs.
-after that itll just be feature additions!
-how exciting...
+to check installation has worked, run `llun` in the command line to view the help menu for the application.
 
-## build guide
+### Basic Usage
+
+To run Llun in your local directory, use the command
+
+```
+llun check .
+```
+If it is running correctly, you should (eventually) see a json formatted response, explaining to you areas of architectural weakness in the provided code.
+
+**Note** You will need to have set the `OPENAI_API_KEY` variable in your environment to a valid openai api key in order to get valid output from the service. New api keys can be generated at [this address](https://platform.openai.com/api-keys). Users should be cognisant of the associated costs to run their chosen AI model.
+
+## Configuring Llun
+
+Llun makes use of a heirarchical configuration under the following rules:
+
+1. Llun has a sensible set of default values, which can be directly observed in `src/data/default.toml`
+2. Use of the `tool.llun` tag in `pyproject.toml` will overwrite any defaults
+3. Use of a `llun.toml` will overwrite any prior configurations 
+4. any CLI arguments override everything prior
+
+At the moment, Llun does not support any nested configuration. If you require this feature (for instance for a monorepo), feel free to develop it and submit a PR.
+
+### API Guide
+
+the following table describes the various methods available to the `llun check` command. It is kept up to date with the currently deployed package.
+
+| Argument | Description | Valid Values | Default |
+|----------|-------------|--------------|---------|
+| `--path`   | The directory or file to run llun against | Any path from root i.e. './XXX' or '.' | None |
+| `--exclude` | A path to be excluded from the targeted directory described by `--path` | Any path from root i.e. './XXX' or '.' | None | 
+| `--select` | A (valid) Llun rule code to apply during the check | Any rule code i.e. 'LLUN01' | ['LLUN01', 'LLUN02', 'LLUN03', 'LLUN04', 'LLUN05'] (the SOLID principles) |
+| `--extend-select` | Extend the rules selected in a lower level of configuration | Any rule code i.e. 'LLUN01' | None |
+| `--ignore` | A rule selected at any point prior to be ignored for the current run | Any rule code i.e. 'LLUN01' | None |
+| `--model` | An openAI model to use to run the check on | Any OpenAI model | "gpt4-o" |
+| `--no-respect-gitignore` | Including this flag will disable the behaviour which automatically `--exclude`s any file in the gitignore (not recommended in case you leak secrets etc...) | False |
+| `--output-format` | The format that llun should use for its trace | "json", "azure" | "json" |
+| `--provider` | The LLM provider to run the check against | "openaipublic" | "openaipublic" |
+
+This table will be updated as new methods or valid values are encorporated.
+
+### Rule Guide
+
+The following describes each rule that can be set by Llun. full descriptions can be found in the rule files (`/src/data/rules`)
+
+#### LLUN01: Single Responsibility Principle
+Each class, function, or module should have one clear responsibility and one reason to change.
+
+#### LLUN02: Open/Closed Principle
+Software entities should be open for extension but closed for modification.
+  
+#### LLUN03: Liskov Substitution Principle
+Objects of a superclass should be replaceable with objects of its subclasses without affecting the correctness of the program.
+  
+#### LLUN04: Interface Segregation Principle
+Clients should not be forced to depend on interfaces they do not use.
+  
+#### LLUN05: Dependency Inversion Principle
+High-level modules should not depend on low-level modules. Both should depend on abstractions.
+
+#### LLUN06: Favour Composition Over Inheritance
+Build functionality by combining objects that contain other objects, rather than inheriting behavior from parent classes.
+  
+#### LLUN07: YAGNI (You Aren't Gonna Need It)
+Don't implement functionality until it's actually required. Build only what you need right now, not what you think you might need later.
+
+#### LLUN08: KISS (Keep It Simple, Stupid)
+Choose the simplest solution that solves the problem effectively. Avoid unnecessary complexity in design and implementation.
+  
+#### LLUN09: Keep Functions Pure
+Functions should always return the same output for the same input and have no side effects (don't modify external state or perform I/O operations).
+  
+#### LLUN10: Use Ubiquitous Language
+Use the same terminology and concepts throughout the codebase, documentation, and conversations that domain experts use in the real business context.
+  
+#### LLUN11: Keep Context Bounded
+Define clear boundaries where specific domain models and business rules apply. Different parts of the system can have different interpretations of the same concept.
+  
+#### LLUN12: Convention Over Configuration
+Provide sensible defaults and follow established patterns so developers can be productive without extensive setup or decision-making about common scenarios.
+  
+#### LLUN13: Strategy Pattern
+Define a family of algorithms or behaviors, encapsulate each one, and make them interchangeable at runtime based on context or configuration.
+  
+#### LLUN14: Dependency Injection
+Provide dependencies to a class from the outside rather than creating them internally. Dependencies should be injected through constructors, methods, or properties.
+  
+#### LLUN15: Facade Pattern
+Provide a simplified interface to a complex subsystem by creating a single entry point that coordinates multiple underlying components.
+  
+#### LLUN16: Repository Pattern
+Encapsulate data access logic behind an interface that mimics a collection of domain objects, separating business logic from data persistence concerns.
+
+#### LLUN17: Idempotency
+Operations should produce the same result when called multiple times with the same parameters. Repeated calls should not cause additional side effects or change the system state further.
+
+#### LLUN18: Minimize Stateful Objects
+Prefer stateless objects and immutable data structures. Keep mutable state localized and explicit, rather than spreading it throughout your object hierarchy.
+
+#### LLUN19: Immutable Objects
+Create objects whose state cannot be modified after construction. When changes are needed, return new instances rather than modifying existing ones.
+
+#### LLUN20: Test behaviour, not implementation
+Write tests that verify the system's externally visible behavior rather than its internal implementation details.
+
+## Contributing
+
+We are glad to take contributions via github issues or pull requests into the main branch. Please ensure all code is tested and documented before opening a pull request in order to aid the process along. to test locally, you'll want to follow the build guide below:
+
+### build guide
+
+run the following commands to build the application locally
 
 1. `source .venv/bin/activate`
 2. `uv pip install maturin twine`
 3. `maturin develop`
 4. `uv run llun --help`
 
-*note* for reasons not yet clear to me, maturin doesnt seem to consistantly install the newest version of the codebase when running maturin develop. you may have some luck by fully wiping the venv and installing llun from wheel? alternately its fairly straight forwards to instead test code changes using `cargo run check ...`.
+note that to rebuild after a change, you'll want to make sure you purge the current app version entirely from your environment.
