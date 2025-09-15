@@ -7,11 +7,6 @@ edition = "2024"
 name = "llun"
 path = "src/main.rs"
 
-[lib]
-name = "llun"
-crate-type = ["cdylib", "rlib"]
-path = "src/main.rs" 
-
 [dependencies]
 clap = { version = "4.5.46", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
