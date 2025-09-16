@@ -1,12 +1,11 @@
-use anyhow::Result;
-use crate::output_formatter::OutputFormatter;
+use crate::output_formatter::{OutputFormatter, OutputFormatterError};
 use crate::api_client::Response;
 
 pub struct AzureFormatter;
 
 /// make use of the output formatter abstraction
 impl OutputFormatter for AzureFormatter {
-    fn format(&self, response: &Response) -> Result<String> {
+    fn format(&self, response: &Response) -> Result<String, OutputFormatterError> {
         if response.detected_issues.is_empty() {
             return Ok("##[section]No architecture issues detected".to_string());
         }

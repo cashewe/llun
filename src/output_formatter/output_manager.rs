@@ -1,8 +1,13 @@
 use std::collections::HashMap;
-use anyhow::Result;
-use crate::output_formatter::{OutputFormat, OutputFormatter};
+use crate::output_formatter::{OutputFormat, OutputFormatter, OutputFormatterError};
 use crate::api_client::Response;
 use crate::output_formatter::{JsonFormatter, AzureFormatter};
+
+#[derive(Debug, thiserror::Error)]
+pub enum OutputManagerError {
+    #[error("Failed to format the model output using the desired method: {0}")]
+    OutputFormattingFailed(#[from] OutputFormatterError),
+}
 
 pub struct OutputManager {
     formatters: HashMap<OutputFormat, Box<dyn OutputFormatter>>,
@@ -22,11 +27,11 @@ impl OutputManager {
     }
 
     /// use the selected formats in order
-    pub fn process_response(&self, response: &Response, output_formats: &Vec<OutputFormat>) -> Result<()> {
+    pub fn process_response(&self, response: &Response, output_formats: &Vec<OutputFormat>) -> Result<(), OutputManagerError> {
         output_formats
             .iter()
             .filter_map(|format| self.formatters.get(format).map(|formatter| formatter))
-            .try_for_each(|formatter| -> Result<()> {
+            .try_for_each(|formatter| -> Result<(), OutputManagerError> {
                 Ok(println!("{}", formatter.format(response)?))
             })?;
         
