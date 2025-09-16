@@ -1,6 +1,12 @@
 use std::fmt;
 use std::path::PathBuf;
-use super::file::File;
+use super::file::{File, FileError};
+
+#[derive(Debug, thiserror::Error)]
+pub enum FileSetError {
+    #[error("Rule failed to be read file")]
+    FileReadError(#[from] FileError),
+}
 
 #[derive(Debug, Default)]
 pub struct FileSet {
@@ -13,13 +19,13 @@ impl FileSet {
     }
 
         /// load the file data in
-    pub fn load_from_files(file_paths: Vec<PathBuf>) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn load_from_files(file_paths: Vec<PathBuf>) -> Result<Self, FileSetError> {
         let mut collection = Self::new();
 
         for file_path in file_paths {
             match File::from_file(file_path.to_string_lossy().to_string()) {
                 Ok(file) => collection.add_file(file),
-                Err(e) => eprintln!("Failed to load file: {}", e),
+                Err(e) => return Err(FileSetError::FileReadError(e)),
             }
         }
         Ok(collection)
