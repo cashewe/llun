@@ -78,6 +78,11 @@ pub struct Args {
     #[arg(short, long)]
     #[serde(default, skip_serializing_if = "Option::is_none")]
     provider: Option<AvailableScanner>,
+
+    /// user provided context (i.e. commit message) to help llun understand the point
+    #[arg(short, long)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    context: Option<String>,
 }
 
 #[allow(dead_code)]  // the codes not dead, just uncalled in the repo
@@ -101,7 +106,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let files = FileManager::load_from_cli(config.path.expect("A path must be set"), config.exclude, config.no_respect_gitignore)?;
             let rules = rule_manager.load_from_cli(config.select, config.extend_select, config.ignore)?;
 
-            let prompt_manager = PromptManager::new(&rules, &files)?;
+            let prompt_manager = PromptManager::new(&rules, &files, &config.context)?;
             let model_response = scanner_manager.run_scan(&prompt_manager.system_prompt, &prompt_manager.user_prompt, config.model.expect("A model must be provided"), config.provider.expect("A provider must be provided.")).await?;
             
             output_manager.process_response(&model_response, &config.output_format)?

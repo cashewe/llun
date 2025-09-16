@@ -35,9 +35,10 @@ impl PromptManager {
     pub fn new(
         rules: &RuleSet,
         files: &FileSet,
+        context: &Option<String>,
     ) -> Result<Self, PromptManagerError> {
         let system_prompt = Self::load_system_prompt()?;
-        let user_prompt = Self::load_user_prompt(rules, files)?;
+        let user_prompt = Self::load_user_prompt(rules, files, context)?;
 
         Ok(Self {
             system_prompt,
@@ -66,6 +67,7 @@ impl PromptManager {
     pub fn load_user_prompt(
         rules: &RuleSet,
         files: &FileSet,
+        context: &Option<String>,
     ) -> Result<String, PromptManagerError> {
         let rules_string = rules.to_string();
         let files_string = files.to_string();
@@ -76,9 +78,15 @@ impl PromptManager {
             .contents_utf8()
             .ok_or_else(|| PromptManagerError::InvalidUtf8("user_prompt.txt".to_string()))?;
 
-        let formatted_prompt = prompt_template
+        let mut formatted_prompt = prompt_template
             .replace("{rules}", &rules_string)
-            .replace("{files}", &files_string);
+            .replace("{files}", &files_string)
+            .to_owned();
+
+        if context.is_some() {
+            let contextual_prompt: &str = "\nThe user has also supplied the following additional context: {context}";
+            formatted_prompt.push_str(contextual_prompt);
+        }
 
         Ok(formatted_prompt)
     }

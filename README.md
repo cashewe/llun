@@ -82,6 +82,7 @@ the following table describes the various methods available to the `llun check` 
 | `--no-respect-gitignore` | Including this flag will disable the behaviour which automatically `--exclude`s any file in the gitignore (not recommended in case you leak secrets etc...) | False |
 | `--output-format` | The format that llun should use for its trace | "json", "azure" | "json" |
 | `--provider` | The LLM provider to run the check against | "openaipublic" | "openaipublic" |
+| `--context`  | Additional ontext the LLM might want to know to guide it i.e. "this is for xyz purpose" or "this will not need to be touched again" | any free text | None |
 
 This table will be updated as new methods or valid values are encorporated.
 
