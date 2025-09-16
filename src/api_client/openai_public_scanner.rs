@@ -6,8 +6,7 @@ use async_openai::{
         CreateChatCompletionRequestArgs,
     },
 };
-use anyhow::Result;
-use crate::api_client::{Response, Scanner};
+use crate::api_client::{Response, Scanner, ScannerError};
 
 #[derive(Debug, thiserror::Error)]
 pub enum OpenAiClientError{
@@ -30,7 +29,7 @@ pub struct OpenAiPublicScanner {
 impl Scanner for OpenAiPublicScanner {
 /// get the models response to our lovely prompts
     /// taken from https://github.com/64bit/async-openai/blob/main/examples/chat/src/main.rs
-    async fn scan_files(&self, system_prompt: &String, user_prompt: &String, model: String) -> Result<Response> {
+    async fn scan_files(&self, system_prompt: &String, user_prompt: &String, model: String) -> Result<Response, ScannerError> {
         let request = CreateChatCompletionRequestArgs::default()
             .model(model)
             .messages([
@@ -46,8 +45,9 @@ impl Scanner for OpenAiPublicScanner {
             .build()?;
 
         let response = self.client.chat().create(request).await?;
-        let content = response.choices.first().and_then(|choice| choice.message.content.as_ref()).ok_or(OpenAiClientError::EmptyResponse)?;
-        let cleaned_content = Self::extract_json_from_response(content)?;
+        let content = response.choices.first().and_then(|choice| choice.message.content.as_ref()).ok_or(ScannerError::OpenAiClientError("Empty response".to_string()))?;
+        let cleaned_content = Self::extract_json_from_response(content)
+            .map_err(Self::map_openai_client_error)?;
         let formatted_response: Response = serde_json::from_str(cleaned_content)?;
         
         Ok(formatted_response)
@@ -58,7 +58,7 @@ impl OpenAiPublicScanner {
     /// assumes user has an openai key set
     /// we will need a different setup for alternate scenarios
     /// taken from https://docs.rs/async-openai/0.29.3/async_openai/
-    pub fn new() -> Result<Self> {
+    pub fn new() -> Result<Self, OpenAiClientError> {
         let client = Client::new();
 
         Ok(Self { client })
@@ -81,5 +81,9 @@ impl OpenAiPublicScanner {
         }
         
         Ok(&content[start_pos..=end_pos])
+    }
+
+    fn map_openai_client_error(err: OpenAiClientError) -> ScannerError {
+        ScannerError::OpenAiClientError(format!("{err}").into())
     }
 }
