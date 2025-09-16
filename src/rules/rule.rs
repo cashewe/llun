@@ -3,6 +3,15 @@ use std::fmt;
 use serde::{Serialize, Deserialize};
 use crate::data::{RULES_DIR};
 
+#[derive(Debug, thiserror::Error)]
+pub enum RuleError {
+    #[error("Requested rule doesn't exist")]
+    RuleNotFound(),
+    #[error("Rule file cant be translated to UTF-8")]
+    RuleNotDecodable(),
+    #[error("Rule failed to be read from json {0}")]
+    RuleReadError(#[from] serde_json::Error),
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RuleExample {
@@ -23,15 +32,15 @@ pub struct Rule {
 
 impl Rule {
     /// load rule from a rule json
-    pub fn from_file(rule_code: String) -> Result<Self, Box<dyn std::error::Error>> {
+    pub fn from_file(rule_code: String) -> Result<Self, RuleError> {
         let filename = format!("{}.json", rule_code);
         let file = RULES_DIR
             .get_file(&filename)
-            .ok_or_else(|| format!("File not found: {}", filename))?;
+            .ok_or_else(|| RuleError::RuleNotFound())?;
 
         let contents = file
             .contents_utf8()
-            .ok_or_else(|| format!("File not valid UTF-8: {}", filename))?;
+            .ok_or_else(|| RuleError::RuleNotDecodable())?;
 
         let mut rule: Rule = serde_json::from_str(&contents)?;
         rule.rule_code = rule_code;
