@@ -1,4 +1,3 @@
-use anyhow::Result;
 use crate::output_formatter::{OutputFormatter, OutputFormatterError};
 use crate::api_client::Response;
 
