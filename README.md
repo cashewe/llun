@@ -2,7 +2,11 @@
  
 ## Intro
 
-Llun ([pronounced '/ɬiːn/'](https://www.howtopronounce.com/welsh/llun), meaning 'picture' (as in **big**)) brings architectural principles directly into your development workflow through a familiar command-line interface. Unlike traditional linters that focus on syntax and style, Llun evaluates your code against configurable architectural rules — ensuring consistency in design patterns, dependency management, and structural decisions across your entire codebase. By leveraging the power of rust, Llun offers a reliable, high performance and type-safe solution to your teams architectural CI/CD needs.
+Llun ([pronounced '/ɬiːn/'](https://www.howtopronounce.com/welsh/llun), meaning 'picture' (as in **big**)) brings architectural principles directly into your development workflow through a familiar command-line interface. Unlike traditional linters that focus on syntax and style, Llun evaluates your code against configurable architectural rules — ensuring consistency in design patterns, dependency management, and structural decisions across your entire codebase. 
+
+Following DevOps principles of early and frequent feedback, Llun shifts architectural validation left in your development pipeline. Rather than discovering architectural drift during lengthy code reviews or post-deployment, teams can catch and correct structural issues immediately—during development, in pre-commit hooks, or as part of continuous integration.
+
+By leveraging the power of rust, Llun offers a reliable, high performance and type-safe solution to your teams architectural CI/CD needs.
 
 ## Why Llun?
 
