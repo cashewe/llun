@@ -40,7 +40,7 @@ impl RuleManager {
 
     /// get list of rules files from the rules folder
     pub fn get_valid_rules() -> Result<HashSet<String>, RuleManagerError> {
-        let valid_rules: HashSet<String> = RULES_DIR
+        let mut valid_rules: HashSet<String> = RULES_DIR
             .files()
             .filter(|file| {
                 file.path().extension().and_then(|s| s.to_str()) == Some("json")
@@ -54,11 +54,36 @@ impl RuleManager {
             })
             .collect();
 
+        Self::add_user_defined_rules(&mut valid_rules)?;
+
         if valid_rules.is_empty() {
             return Err(RuleManagerError::RuleSetLoadError("No rules to load.".to_string()))
         }
 
         Ok(valid_rules)
+    }
+
+    /// add any user defined rules into the rules list
+    /// and error out if the user defines rules we already defined
+    /// you dont get to do that chum
+    /// thats not *for* you
+    pub fn add_user_defined_rules(valid_rules: &mut HashSet<String>) -> Result<(), RuleManagerError> {
+        if let Ok(entries) = std::fs::read_dir("llun") {
+            for entry in entries.flatten() {
+                if let Some(name) = entry.path().file_stem().and_then(|s| s.to_str()) {
+                    if entry.path().extension().and_then(|s| s.to_str()) == Some("json") {
+                        let rule_name = name.to_string();
+                        if valid_rules.contains(&rule_name) {
+                            return Err(RuleManagerError::RuleSetLoadError(
+                                format!("User-defined rule '{}' conflicts with built-in rule", rule_name)
+                            ));
+                        }
+                        valid_rules.insert(rule_name);
+                    }
+                }
+            }
+        }
+        Ok(())
     }
 
     /// get the final list of selected rules based on the inputs in the config
@@ -86,15 +111,18 @@ impl RuleManager {
         let mut collection = RuleSet::new();
         for rule_code in finalised_rules {
             let filename = format!("{}.json", rule_code);
-            let file = RULES_DIR
-                .get_file(&filename)
-                .ok_or_else(|| RuleManagerError::RuleSetLoadError(format!("Rule file not found: {}", rule_code)))?;
 
-            let contents = file
-                .contents_utf8()
-                .ok_or_else(|| RuleManagerError::RuleSetLoadError(format!("Rule file not decodable: {}", rule_code)))?;
+            let contents = if let Ok(local_contents) = std::fs::read_to_string(format!("llun/{}", filename)) {
+                local_contents
+            } else if let Some(file) = RULES_DIR.get_file(&filename) {
+                file.contents_utf8()
+                    .ok_or_else(|| RuleManagerError::RuleSetLoadError(format!("Rule file not decodable: {}", rule_code)))?
+                    .to_string()
+            } else {
+                return Err(RuleManagerError::RuleSetLoadError(format!("Rule file not found: {}", rule_code)));
+            };
 
-            match Rule::from_json_str(rule_code, contents) {
+            match Rule::from_json_str(rule_code, &contents) {
                 Ok(rule) => collection.add_rule(rule),
                 Err(e) => return Err(RuleManagerError::RuleSetLoadError(e.to_string())),
             }
