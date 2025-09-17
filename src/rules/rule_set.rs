@@ -1,12 +1,6 @@
 use std::fmt;
 use super::rule::Rule;
 
-#[derive(Debug, thiserror::Error)]
-pub enum RuleSetError {
-    #[error("Requested rule failed to load: {0}")]
-    RuleLoadFail(String),
-}
-
 #[derive(Debug, Default)]
 pub struct RuleSet {
     rules: Vec<Rule>,
@@ -15,19 +9,6 @@ pub struct RuleSet {
 impl RuleSet {
     pub fn new() -> Self {
         Self::default()
-    }
-
-    /// load rule files by code
-    pub fn load_from_json(rule_codes: Vec<String>) -> Result<Self, RuleSetError> {
-        let mut collection = Self::new();
-
-        for rule_code in rule_codes {
-            match Rule::from_file(rule_code) {
-                Ok(rule) => collection.add_rule(rule),
-                Err(e) => return Err(RuleSetError::RuleLoadFail(e.to_string())),
-            }
-        }
-        Ok(collection)
     }
 
     /// add a rule to the Vec

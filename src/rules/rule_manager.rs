@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 use crate::data::{RULES_DIR};
-use crate::rules::RuleSet;
+use crate::rules::{RuleSet, Rule};
 
 
 // claude suggested these custom errors
@@ -83,8 +83,23 @@ impl RuleManager {
     /// load a ruleset based on provided config
     pub fn load_ruleset(&self, config: &RuleSelectionConfig) -> Result<RuleSet, RuleManagerError> {
         let finalised_rules = self.finalise_selected_rules(config)?;
+        let mut collection = RuleSet::new();
+        for rule_code in finalised_rules {
+            let filename = format!("{}.json", rule_code);
+            let file = RULES_DIR
+                .get_file(&filename)
+                .ok_or_else(|| RuleManagerError::RuleSetLoadError(format!("Rule file not found: {}", rule_code)))?;
 
-        RuleSet::load_from_json(finalised_rules).map_err(|e| RuleManagerError::RuleSetLoadError(e.to_string()))
+            let contents = file
+                .contents_utf8()
+                .ok_or_else(|| RuleManagerError::RuleSetLoadError(format!("Rule file not decodable: {}", rule_code)))?;
+
+            match Rule::from_json_str(rule_code, contents) {
+                Ok(rule) => collection.add_rule(rule),
+                Err(e) => return Err(RuleManagerError::RuleSetLoadError(e.to_string())),
+            }
+        }
+        Ok( collection )
     }
 
     /// load the ruleset object from cli commands

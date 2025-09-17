@@ -1,7 +1,6 @@
 use std::fmt;
 
 use serde::{Serialize, Deserialize};
-use crate::data::{RULES_DIR};
 
 #[derive(Debug, thiserror::Error)]
 pub enum RuleError {
@@ -31,17 +30,8 @@ pub struct Rule {
 }
 
 impl Rule {
-    /// load rule from a rule json
-    pub fn from_file(rule_code: String) -> Result<Self, RuleError> {
-        let filename = format!("{}.json", rule_code);
-        let file = RULES_DIR
-            .get_file(&filename)
-            .ok_or_else(|| RuleError::RuleNotFound())?;
-
-        let contents = file
-            .contents_utf8()
-            .ok_or_else(|| RuleError::RuleNotDecodable())?;
-
+    /// load rule from a rule json string
+    pub fn from_json_str(rule_code: String, contents: &str) -> Result<Self, RuleError> {
         let mut rule: Rule = serde_json::from_str(&contents)?;
         rule.rule_code = rule_code;
 
