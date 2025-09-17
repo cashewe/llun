@@ -88,7 +88,7 @@ This table will be updated as new methods or valid values are encorporated.
 
 ### Rule Guide
 
-The following describes each rule that can be set by Llun. full descriptions can be found in the rule files (`/src/data/rules`)
+The following describes each rule that can be set by Llun. full descriptions can be found in the rule files (`/src/data/rules`). When picking rules it may be tempting to simply turn them all on, but do be aware that older LLM models can become overwhelmed and unreliable when provided too much context - pick the subset of rules you think will most impact the long term success of your products.
 
 #### LLUN01: Single Responsibility Principle
 Each class, function, or module should have one clear responsibility and one reason to change.
@@ -149,6 +149,28 @@ Create objects whose state cannot be modified after construction. When changes a
 
 #### LLUN20: Test behaviour, not implementation
 Write tests that verify the system's externally visible behavior rather than its internal implementation details.
+
+#### Custom Rules
+
+Llun now also supports *custom rules*. To define a custom rule, you'll need to create a folder in the root where you run llun, called 'llun'. this folder should contain one or more json files whos names will be the 'rule code' for the associated rule they define. **NOTE**: Llun doesnt support remapping existing rule codes, so you'll have to pick names that are unique compared to the public rules we ship.
+
+The schema your custom rules should adhere to is as follows:
+
+```
+{
+  "name": "simple name for rule, better for the llm if its a commonly known short hand",
+  "description": "description of the rule to further clarify its context both to the LLM and to your developers",
+  "risk_if_violated": "clearly spell out the danger of not following the rule. this helps the LLM assess the potential impacts of your rule, and decide what constitutes a major vs minor violation",
+  "examples": [
+    {
+      "violation": "A snippet showing the rule being broken",
+      "better": "An ammended snippet showing a better way to solve the problem by following the rule"
+    }, ...
+  ]
+}
+```
+
+please be aware that all json files in the llun directory will be treated as rules, and as such you shouldnt have other formats of jsons included or llun will raise an error. you can if you so wish include any other file types in this directory as the tool only looks at jsons - but for cleanliness sake we dont recommend it.
 
 ## Contributing
 
