@@ -1,5 +1,4 @@
 use std::fmt;
-use std::path::PathBuf;
 use super::file::{File, FileError};
 
 #[derive(Debug, thiserror::Error)]

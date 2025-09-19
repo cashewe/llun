@@ -1,7 +1,6 @@
 use std::collections::HashMap;
-use crate::output_formatter::{OutputFormat, OutputFormatter, OutputFormatterError};
+use crate::formatters::{OutputFormat, OutputFormatter, OutputFormatterError, JsonFormatter, AzureFormatter};
 use crate::api_client::Response;
-use crate::output_formatter::{JsonFormatter, AzureFormatter};
 
 #[derive(Debug, thiserror::Error)]
 pub enum OutputManagerError {
@@ -15,6 +14,12 @@ pub struct OutputManager {
 
 /// manager the output format of the object in a cool, scalable way
 /// is there no option for dynamic registry in rust?
+impl Default for OutputManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl OutputManager {
     /// register all formatters to the object
     pub fn new() -> Self {
@@ -27,10 +32,10 @@ impl OutputManager {
     }
 
     /// use the selected formats in order
-    pub fn process_response(&self, response: &Response, output_formats: &Vec<OutputFormat>) -> Result<(), OutputManagerError> {
+    pub fn process_response(&self, response: &Response, output_formats: &[OutputFormat]) -> Result<(), OutputManagerError> {
         output_formats
             .iter()
-            .filter_map(|format| self.formatters.get(format).map(|formatter| formatter))
+            .filter_map(|format| self.formatters.get(format))
             .try_for_each(|formatter| -> Result<(), OutputManagerError> {
                 Ok(println!("{}", formatter.format(response)?))
             })?;

@@ -56,7 +56,7 @@ impl FileManager {
     }
 
     /// validate that the provided path exists
-    pub fn validate_path(path: &PathBuf) -> Result<(), FileManagerError> {
+    pub fn validate_path(path: &Path) -> Result<(), FileManagerError> {
         if !path.exists() {
             return Err(FileManagerError::PathNotFound(path.to_string_lossy().to_string()));
         }; 
@@ -104,7 +104,7 @@ impl FileManager {
             no_respect_gitignore,
         };
 
-        Ok(Self::load_fileset(&config)?)
+        Self::load_fileset(&config)
     }
 }
 

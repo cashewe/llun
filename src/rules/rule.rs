@@ -32,7 +32,7 @@ pub struct Rule {
 impl Rule {
     /// load rule from a rule json string
     pub fn from_json_str(rule_code: String, contents: &str) -> Result<Self, RuleError> {
-        let mut rule: Rule = serde_json::from_str(&contents)?;
+        let mut rule: Rule = serde_json::from_str(contents)?;
         rule.rule_code = rule_code;
 
         Ok(rule)

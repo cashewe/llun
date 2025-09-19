@@ -70,8 +70,8 @@ impl RuleManager {
     pub fn add_user_defined_rules(valid_rules: &mut HashSet<String>) -> Result<(), RuleManagerError> {
         if let Ok(entries) = std::fs::read_dir("llun") {
             for entry in entries.flatten() {
-                if let Some(name) = entry.path().file_stem().and_then(|s| s.to_str()) {
-                    if entry.path().extension().and_then(|s| s.to_str()) == Some("json") {
+                if let Some(name) = entry.path().file_stem().and_then(|s| s.to_str())
+                    && entry.path().extension().and_then(|s| s.to_str()) == Some("json") {
                         let rule_name = name.to_string();
                         if valid_rules.contains(&rule_name) {
                             return Err(RuleManagerError::RuleSetLoadError(
@@ -80,7 +80,6 @@ impl RuleManager {
                         }
                         valid_rules.insert(rule_name);
                     }
-                }
             }
         }
         Ok(())
@@ -138,6 +137,6 @@ impl RuleManager {
             ignore,
         };
 
-        Ok(self.load_ruleset(&config)?)
+        self.load_ruleset(&config)
     }
 }

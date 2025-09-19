@@ -1,4 +1,4 @@
-use crate::output_formatter::{OutputFormatter, OutputFormatterError};
+use crate::formatters::{OutputFormatter, OutputFormatterError};
 use crate::api_client::Response;
 
 pub struct AzureFormatter;

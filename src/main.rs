@@ -7,13 +7,13 @@ pub mod data;
 pub mod rules;
 pub mod files;
 pub mod api_client;
-pub mod output_formatter;
+pub mod formatters;
 
 pub use data::DEFAULT_CONFIG;
 pub use rules::RuleManager;
 pub use files::FileManager;
 pub use api_client::{PromptManager, ScannerManager, AvailableScanner};
-pub use output_formatter::{OutputFormat, OutputManager};
+pub use formatters::{OutputFormat, OutputManager};
 
 /// CLI for the application
 #[derive(Parser)]

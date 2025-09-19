@@ -30,7 +30,7 @@ impl ScannerManager {
     pub async fn run_scan(&self, system_prompt: &String, user_prompt: &String, model: String, scanner: AvailableScanner) -> Result<Response, ScannerManagerError> {
         let chosen_scanner = self.scanners
             .get(&scanner)
-            .ok_or_else(|| ScannerManagerError::ScannerNotFound())?;
+            .ok_or_else(ScannerManagerError::ScannerNotFound)?;
             
         Ok( chosen_scanner.scan_files(system_prompt, user_prompt, model).await? )
     }
