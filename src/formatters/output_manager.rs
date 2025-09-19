@@ -37,7 +37,8 @@ impl OutputManager {
             .iter()
             .filter_map(|format| self.formatters.get(format))
             .try_for_each(|formatter| -> Result<(), OutputManagerError> {
-                Ok(println!("{}", formatter.format(response)?))
+                println!("{}", formatter.format(response)?);
+                Ok(())
             })?;
         
         Ok(())

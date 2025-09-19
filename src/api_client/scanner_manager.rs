@@ -27,7 +27,7 @@ impl ScannerManager {
 
     /// use your chosen scanner (its open ai isnt you normie)
     /// to perform a scan
-    pub async fn run_scan(&self, system_prompt: &String, user_prompt: &String, model: String, scanner: AvailableScanner) -> Result<Response, ScannerManagerError> {
+    pub async fn run_scan(&self, system_prompt: &str, user_prompt: &str, model: String, scanner: AvailableScanner) -> Result<Response, ScannerManagerError> {
         let chosen_scanner = self.scanners
             .get(&scanner)
             .ok_or_else(ScannerManagerError::ScannerNotFound)?;
