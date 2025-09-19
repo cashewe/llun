@@ -18,19 +18,6 @@ impl FileSet {
         Self::default()
     }
 
-        /// load the file data in
-    pub fn load_from_files(file_paths: Vec<PathBuf>) -> Result<Self, FileSetError> {
-        let mut collection = Self::new();
-
-        for file_path in file_paths {
-            match File::from_file(file_path.to_string_lossy().to_string()) {
-                Ok(file) => collection.add_file(file),
-                Err(e) => return Err(FileSetError::FileReadError(e)),
-            }
-        }
-        Ok(collection)
-    }
-
     /// add a rule to the Vec
     pub fn add_file(&mut self, file: File) {
         self.files.push(file);

@@ -3,7 +3,7 @@ use std::io;
 use std::path::{PathBuf, Path};
 use ignore::{WalkBuilder};
 
-use crate::files::FileSet;
+use crate::files::{FileSet, File, FileError};
 
 
 // claude suggested these custom errors
@@ -17,6 +17,8 @@ pub enum FileManagerError {
     IoError(#[from] io::Error),
     #[error("walk error: {0}")]
     WalkError(#[from] ignore::Error),
+    #[error("Rule failed to be read file")]
+    FileReadError(#[from] FileError),
 }
 
 /// The cli / toml values that a user can use to control files
@@ -37,7 +39,20 @@ impl FileManager {
         let exclude_set: HashSet<PathBuf> = config.exclude.iter().cloned().collect();
         let files = Self::collect_files(&config.path, &exclude_set, config.no_respect_gitignore)?;
 
-        FileSet::load_from_files(files).map_err(|e| FileManagerError::FileSetLoadError(e.to_string()))
+        FileManager::load_from_files(files).map_err(|e| FileManagerError::FileSetLoadError(e.to_string()))
+    }
+
+    /// create a fileset
+    pub fn load_from_files(file_paths: Vec<PathBuf>) -> Result<FileSet, FileManagerError> {
+        let mut collection = FileSet::new();
+
+        for file_path in file_paths {
+            match File::from_file(file_path.to_string_lossy().to_string()) {
+                Ok(file) => collection.add_file(file),
+                Err(e) => return Err(FileManagerError::FileReadError(e)),
+            }
+        }
+        Ok(collection)
     }
 
     /// validate that the provided path exists
