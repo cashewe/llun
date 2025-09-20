@@ -942,6 +942,7 @@ dependencies = [
  "async-trait",
  "clap",
  "figment",
+ "futures",
  "ignore",
  "include_dir",
  "schemars",

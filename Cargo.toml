@@ -19,6 +19,7 @@ tokio = { version = "1.47.1", features = ["rt-multi-thread", "macros"] }
 figment = { version = "0.10.19", features = ["toml"] }
 ignore = "0.4.23"
 async-trait = "0.1.89"
+futures = "0.3.31"
 
 [tool.maturin]
 python-source = "python"

@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use tokio::try_join;
+use futures::future::try_join_all;
 use crate::api_client::{AvailableScanner, OpenAiClientError, OpenAiPublicScanner, Response, Scanner, ScannerError};
 
 
@@ -28,19 +29,18 @@ impl ScannerManager {
 
     /// use your chosen scanner (its open ai isnt you normie)
     /// to perform a scan
-    pub async fn run_scan(&self, system_prompt: &str, user_prompt: &str, model: String, scanner: AvailableScanner, production_mode: bool) -> Result<Response, ScannerManagerError> {
+    pub async fn run_scan(&self, system_prompt: &str, user_prompt: &str, model: &str, scanner: AvailableScanner, production_mode: bool) -> Result<Response, ScannerManagerError> {
         let chosen_scanner = self.scanners
             .get(&scanner)
             .ok_or_else(ScannerManagerError::ScannerNotFound)?;
 
-        if production_mode {
-            let (response1, response2, response3) = try_join!(
-                chosen_scanner.scan_files(system_prompt, user_prompt, model.clone()),
-                chosen_scanner.scan_files(system_prompt, user_prompt, model.clone()),
-                chosen_scanner.scan_files(system_prompt, user_prompt, model.clone())
-            )?;
+        if production_mode { // maybe let the user configure 'n'?
+            let futures = (0..3).map(|_| {
+                chosen_scanner.scan_files(system_prompt, user_prompt, model)
+            });
+            let results = try_join_all(futures).await?;
 
-            let combined = self.combine_responses(vec![response1, response2, response3]);
+            let combined = self.combine_responses(results);
 
             Ok( combined )
         } else{
