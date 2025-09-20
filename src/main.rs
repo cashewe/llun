@@ -85,7 +85,7 @@ pub struct Args {
     context: Option<String>,
 
     /// utilise USC to improve the reliability of the model response
-    #[arg(short, long, action = clap::ArgAction::SetTrue)]
+    #[arg(long, action = clap::ArgAction::SetTrue)]
     #[serde(default)]
     production_mode: bool,
 }

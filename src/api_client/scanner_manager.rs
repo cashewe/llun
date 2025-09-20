@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use tokio::try_join;
 use futures::future::try_join_all;
 use crate::api_client::{AvailableScanner, OpenAiClientError, OpenAiPublicScanner, Response, Scanner, ScannerError};
 
@@ -44,7 +43,6 @@ impl ScannerManager {
 
             Ok( combined )
         } else{
-            println!("Consider using production mode if reliably reproducible results are desired");
             Ok( chosen_scanner.scan_files(system_prompt, user_prompt, model).await? )
         }
     }
