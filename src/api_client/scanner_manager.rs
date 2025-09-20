@@ -38,7 +38,6 @@ impl ScannerManager {
                 chosen_scanner.scan_files(system_prompt, user_prompt, model)
             });
             let results = try_join_all(futures).await?;
-
             let combined = self.combine_responses(results);
 
             Ok( combined )
