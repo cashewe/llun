@@ -9,6 +9,7 @@ pub struct Response {
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct DetectedIssue {
     pub rule_code: String,
+    pub name: String,
     pub file_path: String,
     pub brief_description: String,
     pub explanation: String,

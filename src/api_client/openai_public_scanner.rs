@@ -32,6 +32,7 @@ impl Scanner for OpenAiPublicScanner {
     async fn scan_files(&self, system_prompt: &str, user_prompt: &str, model: &str) -> Result<Response, ScannerError> {
         let request = CreateChatCompletionRequestArgs::default()
             .model(model)
+            .temperature(0.1)
             .messages([
                 ChatCompletionRequestSystemMessageArgs::default()
                     .content(system_prompt.to_string())
