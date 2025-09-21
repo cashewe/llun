@@ -34,7 +34,7 @@ impl ScannerManager {
             .ok_or_else(ScannerManagerError::ScannerNotFound)?;
 
         if production_mode { // maybe let the user configure 'n'?
-            let futures = (0..3).map(|_| {
+            let futures = (0..5).map(|_| {
                 chosen_scanner.scan_files(system_prompt, user_prompt, model)
             });
             let results = try_join_all(futures).await?;
