@@ -24,7 +24,7 @@ pub enum FileManagerError {
 /// The cli / toml values that a user can use to control files
 #[derive(Debug, Default, Clone)]
 pub struct FileSelectionConfig {
-    pub path: PathBuf,
+    pub paths: Vec<PathBuf>,
     pub exclude: Vec<PathBuf>,
     pub no_respect_gitignore: bool,
 }
@@ -35,11 +35,16 @@ pub struct FileManager {}
 impl FileManager {
     /// load the files into a FileSet based on the users provided config
     pub fn load_fileset(config: &FileSelectionConfig) -> Result<FileSet, FileManagerError> {
-        Self::validate_path(&config.path)?;
+        let mut all_files = Vec::new();
         let exclude_set: HashSet<PathBuf> = config.exclude.iter().cloned().collect();
-        let files = Self::collect_files(&config.path, &exclude_set, config.no_respect_gitignore)?;
 
-        FileManager::load_from_files(files).map_err(|e| FileManagerError::FileSetLoadError(e.to_string()))
+        for path in &config.paths {
+            Self::validate_path(path)?;
+            let files = Self::collect_files(path, &exclude_set, config.no_respect_gitignore)?;
+            all_files.extend(files);
+        }
+
+        FileManager::load_from_files(all_files).map_err(|e| FileManagerError::FileSetLoadError(e.to_string()))
     }
 
     /// create a fileset
@@ -97,9 +102,9 @@ impl FileManager {
     }
 
     /// CLI facing entry point
-    pub fn load_from_cli(path: PathBuf, exclude: Vec<PathBuf>, no_respect_gitignore: bool) -> Result<FileSet, FileManagerError> {
+    pub fn load_from_cli(paths: Vec<PathBuf>, exclude: Vec<PathBuf>, no_respect_gitignore: bool) -> Result<FileSet, FileManagerError> {
         let config = FileSelectionConfig{
-            path,
+            paths,
             exclude,
             no_respect_gitignore,
         };

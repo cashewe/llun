@@ -73,7 +73,7 @@ the following table describes the various methods available to the `llun check` 
 
 | Argument | Description | Valid Values | Default |
 |----------|-------------|--------------|---------|
-| `--path`   | The directory or file to run llun against | Any path from root i.e. './XXX' or '.' | None |
+| `--path`   | The directorys or files to run llun against | Any paths from root i.e. './XXX' or '.' | None |
 | `--exclude` | A path to be excluded from the targeted directory described by `--path` | Any path from root i.e. './XXX' or '.' | None | 
 | `--select` | A (valid) Llun rule code to apply during the check | Any rule code i.e. 'LLUN01' | ['LLUN01', 'LLUN02', 'LLUN03', 'LLUN04', 'LLUN05'] (the SOLID principles) |
 | `--extend-select` | Extend the rules selected in a lower level of configuration | Any rule code i.e. 'LLUN01' | None |

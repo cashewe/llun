@@ -35,9 +35,9 @@ pub enum Commands {
 /// not be overwritten by emty values
 #[derive(Parser, Debug, Serialize, Deserialize)]
 pub struct Args {
-    /// path from root to desired directory or specific file
-    #[serde(skip_serializing_if = "Option::is_none")]
-    path: Option<PathBuf>,
+    /// paths from root to desired directory or specific file
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    path: Vec<PathBuf>,
 
     /// paths otherwise targetted by 'path' that should be skipped from scanning
     #[arg(short, long)]
@@ -75,7 +75,7 @@ pub struct Args {
     output_format: Vec<OutputFormat>,
 
     /// llm provider
-    #[arg(short, long)]
+    #[arg(long)]
     #[serde(default, skip_serializing_if = "Option::is_none")]
     provider: Option<AvailableScanner>,
 
@@ -108,7 +108,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .select("tool.llun")
                 .extract()?;
 
-            let files = FileManager::load_from_cli(config.path.expect("A path must be set"), config.exclude, config.no_respect_gitignore)?;
+            let files = FileManager::load_from_cli(config.path, config.exclude, config.no_respect_gitignore)?;
             let rules = rule_manager.load_from_cli(config.select, config.extend_select, config.ignore)?;
 
             let prompt_manager = PromptManager::new(&rules, &files, &config.context)?;
