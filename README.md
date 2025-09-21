@@ -79,10 +79,11 @@ the following table describes the various methods available to the `llun check` 
 | `--extend-select` | Extend the rules selected in a lower level of configuration | Any rule code i.e. 'LLUN01' | None |
 | `--ignore` | A rule selected at any point prior to be ignored for the current run | Any rule code i.e. 'LLUN01' | None |
 | `--model` | An openAI model to use to run the check on | Any OpenAI model | "gpt4-o" |
-| `--no-respect-gitignore` | Including this flag will disable the behaviour which automatically `--exclude`s any file in the gitignore (not recommended in case you leak secrets etc...) | False |
+| `--no-respect-gitignore` | Including this flag will disable the behaviour which automatically `--exclude`s any file in the gitignore (not recommended in case you leak secrets etc...) | NA/A | False |
 | `--output-format` | The format that llun should use for its trace | "json", "azure" | "json" |
 | `--provider` | The LLM provider to run the check against | "openaipublic" | "openaipublic" |
 | `--context`  | Additional ontext the LLM might want to know to guide it i.e. "this is for xyz purpose" or "this will not need to be touched again" | any free text | None |
+| `--production-mode` | boolean flag will run a more powerful (and more expensive) scan when turned on | N/A | False |
 
 This table will be updated as new methods or valid values are encorporated.
 

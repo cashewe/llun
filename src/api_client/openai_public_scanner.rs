@@ -29,7 +29,7 @@ pub struct OpenAiPublicScanner {
 impl Scanner for OpenAiPublicScanner {
 /// get the models response to our lovely prompts
     /// taken from https://github.com/64bit/async-openai/blob/main/examples/chat/src/main.rs
-    async fn scan_files(&self, system_prompt: &str, user_prompt: &str, model: String) -> Result<Response, ScannerError> {
+    async fn scan_files(&self, system_prompt: &str, user_prompt: &str, model: &str) -> Result<Response, ScannerError> {
         let request = CreateChatCompletionRequestArgs::default()
             .model(model)
             .messages([

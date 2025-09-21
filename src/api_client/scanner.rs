@@ -15,5 +15,5 @@ pub enum ScannerError {
 /// In most cases, id imagine this will be a wrapper on an LLM client
 #[async_trait::async_trait]
 pub trait Scanner {
-    async fn scan_files(&self, system_prompt: &str, user_prompt: &str, model: String) -> Result<Response, ScannerError>;
+    async fn scan_files(&self, system_prompt: &str, user_prompt: &str, model: &str) -> Result<Response, ScannerError>;
 }
