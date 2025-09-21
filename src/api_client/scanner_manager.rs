@@ -28,7 +28,7 @@ impl ScannerManager {
 
     /// use your chosen scanner (its open ai isnt you normie)
     /// to perform a scan
-    pub async fn run_scan(&self, system_prompt: &str, user_prompt: &str, model: &str, scanner: AvailableScanner, production_mode: bool) -> Result<Response, ScannerManagerError> {
+    pub async fn run_scan(&self, system_prompt: &str, user_prompt: &str, model: &str, consistency_prompt: &str, scanner: AvailableScanner, production_mode: bool) -> Result<Response, ScannerManagerError> {
         let chosen_scanner = self.scanners
             .get(&scanner)
             .ok_or_else(ScannerManagerError::ScannerNotFound)?;
@@ -40,7 +40,7 @@ impl ScannerManager {
             let results = try_join_all(futures).await?;
             let combined = self.combine_responses(results);
 
-            Ok( combined )
+            Ok( chosen_scanner.scan_files(consistency_prompt, &serde_json::to_string(&combined).unwrap(), model).await? )
         } else{
             Ok( chosen_scanner.scan_files(system_prompt, user_prompt, model).await? )
         }
