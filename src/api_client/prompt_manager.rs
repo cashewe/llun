@@ -55,7 +55,7 @@ impl PromptManager {
         let formatted_schema = serde_json::to_string_pretty(&schema)?;
 
         let prompt_template = PROMPT_DIR
-            .get_file("system_prompt.txt")
+            .get_file(prompt_filename)
             .ok_or_else(|| PromptManagerError::FileNotFound(prompt_filename.to_string()))?
             .contents_utf8()
             .ok_or_else(|| PromptManagerError::InvalidUtf8(prompt_filename.to_string()))?;
@@ -74,12 +74,13 @@ impl PromptManager {
     ) -> Result<String, PromptManagerError> {
         let rules_string = rules.to_string();
         let files_string = files.to_string();
+        let prompt_path = "user_prompt_scan.txt";
 
         let prompt_template = PROMPT_DIR
-            .get_file("user_prompt.txt")
-            .ok_or_else(|| PromptManagerError::FileNotFound("user_prompt_scan.txt".to_string()))?
+            .get_file(&prompt_path)
+            .ok_or_else(|| PromptManagerError::FileNotFound(prompt_path.to_string()))?
             .contents_utf8()
-            .ok_or_else(|| PromptManagerError::InvalidUtf8("user_prompt_scan.txt".to_string()))?;
+            .ok_or_else(|| PromptManagerError::InvalidUtf8(prompt_path.to_string()))?;
 
         let mut formatted_prompt = prompt_template
             .replace("{rules}", &rules_string)
