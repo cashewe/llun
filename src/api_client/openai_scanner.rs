@@ -62,24 +62,8 @@ impl Scanner for OpenAiScanner {
 }
 
 impl OpenAiScanner {
-    /// assumes user has an openai key set
-    /// we will need a different setup for alternate scenarios
-    /// taken from https://docs.rs/async-openai/0.29.3/async_openai/
-    pub fn new() -> Result<Self, OpenAiClientError> {
-        // Try Azure first if Azure-specific env vars are set
-        if std::env::var("AZURE_OPENAI_API_KEY").is_ok() {
-            Self::new_azure()
-        } else if std::env::var("OPENAI_API_KEY").is_ok() {
-            Self::new_public()
-        } else {
-            Err(OpenAiClientError::MissingEnvVar(
-                "Either OPENAI_API_KEY (for public OpenAI) or AZURE_OPENAI_API_KEY (for Azure OpenAI) must be set".to_string()
-            ))
-        }
-    }
-
     /// instantiate a public openai instance
-    pub fn new_public() -> Result<Self, OpenAiClientError> {
+    pub fn new() -> Result<Self, OpenAiClientError> {
         let client = Client::new(); // it auto pulls the key env var
         Ok(Self::Public(client))
     }

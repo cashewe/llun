@@ -10,7 +10,9 @@ pub enum ScannerManagerError {
     #[error("Chosen scanner not found")]
     ScannerNotFound(),
     #[error("Error whilst scanning")]
-    ScannerError(#[from] ScannerError)
+    ScannerError(#[from] ScannerError),
+    #[error("No scanners available")]
+    NoScannersAvailable,
 }
 
 pub struct ScannerManager {
@@ -21,9 +23,36 @@ impl ScannerManager {
     pub fn new() -> Result<Self, ScannerManagerError> {
         let mut scanners: HashMap<AvailableScanner, Box<dyn Scanner>> = HashMap::new();
 
-        scanners.insert(AvailableScanner::OpenAi, Box::new(OpenAiScanner::new()?));
+        Self::try_register_scanner(&mut scanners, AvailableScanner::OpenAi, OpenAiScanner::new);
+        Self::try_register_scanner(&mut scanners, AvailableScanner::AzureOpenAi, OpenAiScanner::new_azure);
+
+        if scanners.is_empty() {
+            return Err(ScannerManagerError::NoScannersAvailable);
+        }
 
         Ok(Self{ scanners })
+    }
+
+    /// spent ages trying to find a way to register mappings -_-
+    /// in the end both gpt and claude offered this as the solution
+    /// supprisingly the only difference was claude having clearer var names?
+    /// im sure this cant be the best method as its ugly as sin
+    /// but for now, it works.
+    fn try_register_scanner<F>(
+        scanners: &mut HashMap<AvailableScanner, Box<dyn Scanner>>,
+        scanner_type: AvailableScanner,
+        constructor: F,
+    ) where
+        F: FnOnce() -> Result<OpenAiScanner, OpenAiClientError>,
+    {
+        match constructor() {
+            Ok(scanner) => {
+                scanners.insert(scanner_type, Box::new(scanner));
+            }
+            Err(e) => {
+                eprintln!("Failed to initialize scanner: {}", e);
+            }
+        }
     }
 
     /// use your chosen scanner (its open ai isnt you normie)
