@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use futures::future::try_join_all;
-use crate::api_client::{AvailableScanner, OpenAiClientError, OpenAiPublicScanner, Response, Scanner, ScannerError};
+use crate::api_client::{AvailableScanner, OpenAiClientError, OpenAiScanner, Response, Scanner, ScannerError};
 
 
 #[derive(Debug, thiserror::Error)]
@@ -21,7 +21,7 @@ impl ScannerManager {
     pub fn new() -> Result<Self, ScannerManagerError> {
         let mut scanners: HashMap<AvailableScanner, Box<dyn Scanner>> = HashMap::new();
 
-        scanners.insert(AvailableScanner::OpenAiPublic, Box::new(OpenAiPublicScanner::new()?));
+        scanners.insert(AvailableScanner::OpenAiPublic, Box::new(OpenAiScanner::new()?));
 
         Ok(Self{ scanners })
     }

@@ -21,12 +21,12 @@ pub enum OpenAiClientError{
 }
 
 #[derive(Debug, Clone)]
-pub struct OpenAiPublicScanner {
+pub struct OpenAiScanner {
     pub client: Client<async_openai::config::OpenAIConfig>,
 }
 
 #[async_trait::async_trait]
-impl Scanner for OpenAiPublicScanner {
+impl Scanner for OpenAiScanner {
 /// get the models response to our lovely prompts
     /// taken from https://github.com/64bit/async-openai/blob/main/examples/chat/src/main.rs
     async fn scan_files(&self, system_prompt: &str, user_prompt: &str, model: &str) -> Result<Response, ScannerError> {
@@ -55,7 +55,7 @@ impl Scanner for OpenAiPublicScanner {
     }
 }
 
-impl OpenAiPublicScanner {
+impl OpenAiScanner {
     /// assumes user has an openai key set
     /// we will need a different setup for alternate scenarios
     /// taken from https://docs.rs/async-openai/0.29.3/async_openai/
