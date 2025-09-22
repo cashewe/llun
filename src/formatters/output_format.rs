@@ -6,6 +6,7 @@ use serde::{Serialize, Deserialize};
 pub enum OutputFormat {
     Json,
     Azure,
+    Junit,
 }
 
 /// convert arbitrary string to enum
@@ -16,6 +17,7 @@ impl std::str::FromStr for OutputFormat {
         match s.to_lowercase().as_str() {
             "json" => Ok(OutputFormat::Json),
             "azure" => Ok(OutputFormat::Azure),
+            "junit" => Ok(OutputFormat::Junit),
             _ => Err(format!("Unknown output format: {}", s)),
         }
     }
