@@ -1,5 +1,13 @@
 use std::collections::HashMap;
-use crate::formatters::{OutputFormat, OutputFormatter, OutputFormatterError, JsonFormatter, AzureFormatter, JunitFormatter};
+use crate::formatters::{
+    OutputFormat,
+    OutputFormatter,
+    OutputFormatterError,
+    JsonFormatter,
+    AzureFormatter,
+    JunitFormatter,
+    SummaryFormatter,
+};
 use crate::api_client::Response;
 
 #[derive(Debug, thiserror::Error)]
@@ -28,6 +36,7 @@ impl OutputManager {
         formatters.insert(OutputFormat::Json, Box::new(JsonFormatter));
         formatters.insert(OutputFormat::Azure, Box::new(AzureFormatter));
         formatters.insert(OutputFormat::Junit, Box::new(JunitFormatter));
+        formatters.insert(OutputFormat::Summary, Box::new(SummaryFormatter));
 
         Self{ formatters}
     }
