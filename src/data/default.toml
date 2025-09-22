@@ -9,4 +9,4 @@ model = "gpt-4o"
 output_format = [
     "json"
 ]
-provider = "openaipublic"
+provider = "openai"

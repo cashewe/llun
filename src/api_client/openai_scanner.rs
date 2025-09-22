@@ -18,11 +18,14 @@ pub enum OpenAiClientError{
     JsonParseError(#[from] serde_json::Error),
     #[error("Failed to extract json from response")]
     JsonCleaningError,
+    #[error("Relevant secrets must be set in environment {0}")]
+    MissingEnvVar(String),
 }
 
 #[derive(Debug, Clone)]
-pub struct OpenAiScanner {
-    pub client: Client<async_openai::config::OpenAIConfig>,
+pub enum OpenAiScanner {
+    Public(Client<async_openai::config::OpenAIConfig>),
+    Azure(Client<async_openai::config::AzureConfig>),
 }
 
 #[async_trait::async_trait]
@@ -45,7 +48,10 @@ impl Scanner for OpenAiScanner {
             ])
             .build()?;
 
-        let response = self.client.chat().create(request).await?;
+        let response = match self {
+            OpenAiScanner::Public(client) => client.chat().create(request).await?,
+            OpenAiScanner::Azure(client) => client.chat().create(request).await?,
+        };
         let content = response.choices.first().and_then(|choice| choice.message.content.as_ref()).ok_or(ScannerError::OpenAiClientError("Empty response".to_string()))?;
         let cleaned_content = Self::extract_json_from_response(content)
             .map_err(Self::map_openai_client_error)?;
@@ -60,9 +66,47 @@ impl OpenAiScanner {
     /// we will need a different setup for alternate scenarios
     /// taken from https://docs.rs/async-openai/0.29.3/async_openai/
     pub fn new() -> Result<Self, OpenAiClientError> {
-        let client = Client::new();
+        // Try Azure first if Azure-specific env vars are set
+        if std::env::var("AZURE_OPENAI_API_KEY").is_ok() {
+            Self::new_azure()
+        } else if std::env::var("OPENAI_API_KEY").is_ok() {
+            Self::new_public()
+        } else {
+            Err(OpenAiClientError::MissingEnvVar(
+                "Either OPENAI_API_KEY (for public OpenAI) or AZURE_OPENAI_API_KEY (for Azure OpenAI) must be set".to_string()
+            ))
+        }
+    }
 
-        Ok(Self { client })
+    /// instantiate a public openai instance
+    pub fn new_public() -> Result<Self, OpenAiClientError> {
+        let client = Client::new(); // it auto pulls the key env var
+        Ok(Self::Public(client))
+    }
+
+    /// instantiate an azure openai instance
+    pub fn new_azure() -> Result<Self, OpenAiClientError> {
+        // the docs dont seem to suggest it can auto pull these sadly :( :( :(
+        let api_key = std::env::var("AZURE_OPENAI_API_KEY")
+            .map_err(|_| OpenAiClientError::MissingEnvVar("AZURE_OPENAI_API_KEY".to_string()))?;
+        
+        let endpoint = std::env::var("AZURE_OPENAI_ENDPOINT")
+            .map_err(|_| OpenAiClientError::MissingEnvVar("AZURE_OPENAI_ENDPOINT".to_string()))?;
+        
+        let api_version = std::env::var("AZURE_OPENAI_API_VERSION")
+            .map_err(|_| OpenAiClientError::MissingEnvVar("AZURE_OPENAI_API_VERSION".to_string()))?;
+
+        let deployment = std::env::var("AZURE_OPENAI_DEPLOYMENT")
+            .map_err(|_| OpenAiClientError::MissingEnvVar("AZURE_OPENAI_DEPLOYMENT".to_string()))?;
+
+        let config = async_openai::config::AzureConfig::new()
+            .with_api_key(api_key)
+            .with_api_base(endpoint)
+            .with_deployment_id(deployment)
+            .with_api_version(api_version);
+
+        let client = Client::with_config(config);
+        Ok(Self::Azure(client))
     }
 
     /// https://docs.rs/async-openai/0.29.3/async_openai/types/struct.CreateChatCompletionRequest.html#structfield.response_format

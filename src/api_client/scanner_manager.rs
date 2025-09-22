@@ -21,7 +21,7 @@ impl ScannerManager {
     pub fn new() -> Result<Self, ScannerManagerError> {
         let mut scanners: HashMap<AvailableScanner, Box<dyn Scanner>> = HashMap::new();
 
-        scanners.insert(AvailableScanner::OpenAiPublic, Box::new(OpenAiScanner::new()?));
+        scanners.insert(AvailableScanner::OpenAi, Box::new(OpenAiScanner::new()?));
 
         Ok(Self{ scanners })
     }
