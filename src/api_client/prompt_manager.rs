@@ -77,7 +77,7 @@ impl PromptManager {
         let prompt_path = "user_prompt_scan.txt";
 
         let prompt_template = PROMPT_DIR
-            .get_file(&prompt_path)
+            .get_file(prompt_path)
             .ok_or_else(|| PromptManagerError::FileNotFound(prompt_path.to_string()))?
             .contents_utf8()
             .ok_or_else(|| PromptManagerError::InvalidUtf8(prompt_path.to_string()))?;
