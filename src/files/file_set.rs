@@ -1,5 +1,5 @@
-use std::fmt;
 use super::file::{File, FileError};
+use std::fmt;
 
 #[derive(Debug, thiserror::Error)]
 pub enum FileSetError {

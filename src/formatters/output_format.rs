@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// acceptable output types (user controlled)
 #[derive(Debug, Clone, Copy, Hash, Serialize, Deserialize, Eq, PartialEq)]

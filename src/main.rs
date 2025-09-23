@@ -1,19 +1,22 @@
-use std::path::PathBuf;
 use clap::{Parser, Subcommand};
-use figment::{Figment, providers::{Serialized, Toml, Format}};
-use serde::{Serialize, Deserialize};
+use figment::{
+    Figment,
+    providers::{Format, Serialized, Toml},
+};
+use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 
-pub mod data;
-pub mod rules;
-pub mod files;
 pub mod api_client;
+pub mod data;
+pub mod files;
 pub mod formatters;
+pub mod rules;
 
+pub use api_client::{AvailableScanner, PromptManager, ScannerManager};
 pub use data::DEFAULT_CONFIG;
-pub use rules::RuleManager;
 pub use files::FileManager;
-pub use api_client::{PromptManager, ScannerManager, AvailableScanner};
 pub use formatters::{OutputFormat, OutputManager};
+pub use rules::RuleManager;
 
 /// CLI for the application
 #[derive(Parser)]
@@ -27,7 +30,7 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Commands {
     #[command(about = "Run LLM based architectural survey")]
-    Check (Args),
+    Check(Args),
 }
 
 /// Arguments for the check cli command
@@ -90,14 +93,14 @@ pub struct Args {
     production_mode: bool,
 }
 
-#[allow(dead_code)]  // the codes not dead, just uncalled in the repo
+#[allow(dead_code)] // the codes not dead, just uncalled in the repo
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
     let rule_manager = RuleManager::new()?;
     let scanner_manager = ScannerManager::new()?;
     let output_manager = OutputManager::new();
-    
+
     match cli.command {
         Commands::Check(cli_args) => {
             let config: Args = Figment::new()
@@ -108,19 +111,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .select("tool.llun")
                 .extract()?;
 
-            let files = FileManager::load_from_cli(config.path, config.exclude, config.no_respect_gitignore)?;
-            let rules = rule_manager.load_from_cli(config.select, config.extend_select, config.ignore)?;
+            let files = FileManager::load_from_cli(
+                config.path,
+                config.exclude,
+                config.no_respect_gitignore,
+            )?;
+            let rules =
+                rule_manager.load_from_cli(config.select, config.extend_select, config.ignore)?;
 
             let prompt_manager = PromptManager::new(&rules, &files, &config.context)?;
-            let model_response = scanner_manager.run_scan(
-                &prompt_manager.system_prompt_scan,
-                &prompt_manager.user_prompt,
-                &config.model.expect("A model must be provided"),
-                &prompt_manager.system_prompt_consistency,
-                config.provider.expect("A provider must be provided."), 
-                config.production_mode
-            ).await?;
-            
+            let model_response = scanner_manager
+                .run_scan(
+                    &prompt_manager.system_prompt_scan,
+                    &prompt_manager.user_prompt,
+                    &config.model.expect("A model must be provided"),
+                    &prompt_manager.system_prompt_consistency,
+                    config.provider.expect("A provider must be provided."),
+                    config.production_mode,
+                )
+                .await?;
+
             output_manager.process_response(&model_response, &config.output_format)?
         }
     }

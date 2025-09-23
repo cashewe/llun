@@ -1,10 +1,9 @@
+use ignore::WalkBuilder;
 use std::collections::HashSet;
 use std::io;
-use std::path::{PathBuf, Path};
-use ignore::{WalkBuilder};
+use std::path::{Path, PathBuf};
 
-use crate::files::{FileSet, File, FileError};
-
+use crate::files::{File, FileError, FileSet};
 
 // claude suggested these custom errors
 #[derive(Debug, thiserror::Error)]
@@ -44,7 +43,8 @@ impl FileManager {
             all_files.extend(files);
         }
 
-        FileManager::load_from_files(all_files).map_err(|e| FileManagerError::FileSetLoadError(e.to_string()))
+        FileManager::load_from_files(all_files)
+            .map_err(|e| FileManagerError::FileSetLoadError(e.to_string()))
     }
 
     /// create a fileset
@@ -63,8 +63,10 @@ impl FileManager {
     /// validate that the provided path exists
     pub fn validate_path(path: &Path) -> Result<(), FileManagerError> {
         if !path.exists() {
-            return Err(FileManagerError::PathNotFound(path.to_string_lossy().to_string()));
-        }; 
+            return Err(FileManagerError::PathNotFound(
+                path.to_string_lossy().to_string(),
+            ));
+        };
 
         Ok(())
     }
@@ -102,8 +104,12 @@ impl FileManager {
     }
 
     /// CLI facing entry point
-    pub fn load_from_cli(paths: Vec<PathBuf>, exclude: Vec<PathBuf>, no_respect_gitignore: bool) -> Result<FileSet, FileManagerError> {
-        let config = FileSelectionConfig{
+    pub fn load_from_cli(
+        paths: Vec<PathBuf>,
+        exclude: Vec<PathBuf>,
+        no_respect_gitignore: bool,
+    ) -> Result<FileSet, FileManagerError> {
+        let config = FileSelectionConfig {
             paths,
             exclude,
             no_respect_gitignore,
@@ -112,4 +118,3 @@ impl FileManager {
         Self::load_fileset(&config)
     }
 }
-

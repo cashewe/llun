@@ -1,6 +1,6 @@
 use std::fmt;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, thiserror::Error)]
 pub enum RuleError {
@@ -45,7 +45,11 @@ impl fmt::Display for Rule {
         writeln!(f, "*{}*", self.description)?;
         writeln!(f, "**Risk if violated:** {}", self.risk_if_violated)?;
         for example in &self.examples {
-            writeln!(f, "- Violation: {}\n  Better: {}", example.violation, example.better)?;
+            writeln!(
+                f,
+                "- Violation: {}\n  Better: {}",
+                example.violation, example.better
+            )?;
         }
         Ok(())
     }

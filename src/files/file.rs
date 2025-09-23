@@ -1,6 +1,6 @@
-use std::fs;
+use serde::{Deserialize, Serialize};
 use std::fmt;
-use serde::{Serialize, Deserialize};
+use std::fs;
 
 #[derive(Debug, thiserror::Error)]
 pub enum FileError {
@@ -20,16 +20,15 @@ impl File {
     pub fn from_file(file_path: String) -> Result<Self, FileError> {
         let content = fs::read_to_string(&file_path)?;
 
-        Ok(File { name: file_path, content })
+        Ok(File {
+            name: file_path,
+            content,
+        })
     }
 }
 
 impl fmt::Display for File {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(
-            f,
-            "## **{}**:\n\n {}",
-            self.name, self.content,
-        )
+        write!(f, "## **{}**:\n\n {}", self.name, self.content,)
     }
 }

@@ -1,15 +1,14 @@
+use crate::api_client::{Response, Scanner, ScannerError};
 use async_openai::{
     Client,
     types::{
-        ChatCompletionRequestSystemMessageArgs,
-        ChatCompletionRequestUserMessageArgs,
+        ChatCompletionRequestSystemMessageArgs, ChatCompletionRequestUserMessageArgs,
         CreateChatCompletionRequestArgs,
     },
 };
-use crate::api_client::{Response, Scanner, ScannerError};
 
 #[derive(Debug, thiserror::Error)]
-pub enum OpenAiClientError{
+pub enum OpenAiClientError {
     #[error("Empty response from model")]
     EmptyResponse,
     #[error("OpenAI API request failed: {0}")]
@@ -30,9 +29,14 @@ pub enum OpenAiScanner {
 
 #[async_trait::async_trait]
 impl Scanner for OpenAiScanner {
-/// get the models response to our lovely prompts
+    /// get the models response to our lovely prompts
     /// taken from https://github.com/64bit/async-openai/blob/main/examples/chat/src/main.rs
-    async fn scan_files(&self, system_prompt: &str, user_prompt: &str, model: &str) -> Result<Response, ScannerError> {
+    async fn scan_files(
+        &self,
+        system_prompt: &str,
+        user_prompt: &str,
+        model: &str,
+    ) -> Result<Response, ScannerError> {
         let request = CreateChatCompletionRequestArgs::default()
             .model(model)
             .temperature(0.1)
@@ -52,11 +56,17 @@ impl Scanner for OpenAiScanner {
             OpenAiScanner::Public(client) => client.chat().create(request).await?,
             OpenAiScanner::Azure(client) => client.chat().create(request).await?,
         };
-        let content = response.choices.first().and_then(|choice| choice.message.content.as_ref()).ok_or(ScannerError::OpenAiClientError("Empty response".to_string()))?;
-        let cleaned_content = Self::extract_json_from_response(content)
-            .map_err(Self::map_openai_client_error)?;
+        let content = response
+            .choices
+            .first()
+            .and_then(|choice| choice.message.content.as_ref())
+            .ok_or(ScannerError::OpenAiClientError(
+                "Empty response".to_string(),
+            ))?;
+        let cleaned_content =
+            Self::extract_json_from_response(content).map_err(Self::map_openai_client_error)?;
         let formatted_response: Response = serde_json::from_str(cleaned_content)?;
-        
+
         Ok(formatted_response)
     }
 }
@@ -73,12 +83,13 @@ impl OpenAiScanner {
         // the docs dont seem to suggest it can auto pull these sadly :( :( :(
         let api_key = std::env::var("AZURE_OPENAI_API_KEY")
             .map_err(|_| OpenAiClientError::MissingEnvVar("AZURE_OPENAI_API_KEY".to_string()))?;
-        
+
         let endpoint = std::env::var("AZURE_OPENAI_ENDPOINT")
             .map_err(|_| OpenAiClientError::MissingEnvVar("AZURE_OPENAI_ENDPOINT".to_string()))?;
-        
-        let api_version = std::env::var("AZURE_OPENAI_API_VERSION")
-            .map_err(|_| OpenAiClientError::MissingEnvVar("AZURE_OPENAI_API_VERSION".to_string()))?;
+
+        let api_version = std::env::var("AZURE_OPENAI_API_VERSION").map_err(|_| {
+            OpenAiClientError::MissingEnvVar("AZURE_OPENAI_API_VERSION".to_string())
+        })?;
 
         let deployment = std::env::var("AZURE_OPENAI_DEPLOYMENT")
             .map_err(|_| OpenAiClientError::MissingEnvVar("AZURE_OPENAI_DEPLOYMENT".to_string()))?;
@@ -99,16 +110,18 @@ impl OpenAiScanner {
     /// in the meantime, heres the crappiest hand spun cleaning function
     /// you ever did see
     pub fn extract_json_from_response(content: &str) -> Result<&str, OpenAiClientError> {
-        let start_pos = content.find('{')
+        let start_pos = content
+            .find('{')
             .ok_or_else(|| OpenAiClientError::JsonCleaningError)?;
-        
-        let end_pos = content.rfind('}')
+
+        let end_pos = content
+            .rfind('}')
             .ok_or_else(|| OpenAiClientError::JsonCleaningError)?;
-        
+
         if start_pos >= end_pos {
             return Err(OpenAiClientError::JsonCleaningError);
         }
-        
+
         Ok(&content[start_pos..=end_pos])
     }
 

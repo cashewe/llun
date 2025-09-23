@@ -1,5 +1,5 @@
-use std::fmt;
 use super::rule::Rule;
+use std::fmt;
 
 #[derive(Debug, Default)]
 pub struct RuleSet {

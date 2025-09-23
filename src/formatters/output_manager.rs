@@ -1,14 +1,9 @@
-use std::collections::HashMap;
-use crate::formatters::{
-    OutputFormat,
-    OutputFormatter,
-    OutputFormatterError,
-    JsonFormatter,
-    AzureFormatter,
-    JunitFormatter,
-    SummaryFormatter,
-};
 use crate::api_client::Response;
+use crate::formatters::{
+    AzureFormatter, JsonFormatter, JunitFormatter, OutputFormat, OutputFormatter,
+    OutputFormatterError, SummaryFormatter,
+};
+use std::collections::HashMap;
 
 #[derive(Debug, thiserror::Error)]
 pub enum OutputManagerError {
@@ -38,11 +33,15 @@ impl OutputManager {
         formatters.insert(OutputFormat::Junit, Box::new(JunitFormatter));
         formatters.insert(OutputFormat::Summary, Box::new(SummaryFormatter));
 
-        Self{ formatters}
+        Self { formatters }
     }
 
     /// use the selected formats in order
-    pub fn process_response(&self, response: &Response, output_formats: &[OutputFormat]) -> Result<(), OutputManagerError> {
+    pub fn process_response(
+        &self,
+        response: &Response,
+        output_formats: &[OutputFormat],
+    ) -> Result<(), OutputManagerError> {
         output_formats
             .iter()
             .filter_map(|format| self.formatters.get(format))
@@ -50,7 +49,7 @@ impl OutputManager {
                 println!("{}", formatter.format(response)?);
                 Ok(())
             })?;
-        
+
         Ok(())
     }
 }

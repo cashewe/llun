@@ -1,5 +1,5 @@
-use crate::formatters::{OutputFormatter, OutputFormatterError};
 use crate::api_client::Response;
+use crate::formatters::{OutputFormatter, OutputFormatterError};
 
 pub struct AzureFormatter;
 
@@ -11,7 +11,7 @@ impl OutputFormatter for AzureFormatter {
         }
 
         let mut output = String::new();
-        
+
         for issue in &response.detected_issues {
             // Azure DevOps warning format
             output.push_str(&format!(

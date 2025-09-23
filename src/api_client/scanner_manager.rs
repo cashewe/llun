@@ -1,7 +1,8 @@
-use std::collections::HashMap;
+use crate::api_client::{
+    AvailableScanner, OpenAiClientError, OpenAiScanner, Response, Scanner, ScannerError,
+};
 use futures::future::try_join_all;
-use crate::api_client::{AvailableScanner, OpenAiClientError, OpenAiScanner, Response, Scanner, ScannerError};
-
+use std::collections::HashMap;
 
 #[derive(Debug, thiserror::Error)]
 pub enum ScannerManagerError {
@@ -24,13 +25,17 @@ impl ScannerManager {
         let mut scanners: HashMap<AvailableScanner, Box<dyn Scanner>> = HashMap::new();
 
         Self::try_register_scanner(&mut scanners, AvailableScanner::OpenAi, OpenAiScanner::new);
-        Self::try_register_scanner(&mut scanners, AvailableScanner::AzureOpenAi, OpenAiScanner::new_azure);
+        Self::try_register_scanner(
+            &mut scanners,
+            AvailableScanner::AzureOpenAi,
+            OpenAiScanner::new_azure,
+        );
 
         if scanners.is_empty() {
             return Err(ScannerManagerError::NoScannersAvailable);
         }
 
-        Ok(Self{ scanners })
+        Ok(Self { scanners })
     }
 
     /// spent ages trying to find a way to register mappings -_-
@@ -57,21 +62,38 @@ impl ScannerManager {
 
     /// use your chosen scanner (its open ai isnt you normie)
     /// to perform a scan
-    pub async fn run_scan(&self, system_prompt: &str, user_prompt: &str, model: &str, consistency_prompt: &str, scanner: AvailableScanner, production_mode: bool) -> Result<Response, ScannerManagerError> {
-        let chosen_scanner = self.scanners
+    pub async fn run_scan(
+        &self,
+        system_prompt: &str,
+        user_prompt: &str,
+        model: &str,
+        consistency_prompt: &str,
+        scanner: AvailableScanner,
+        production_mode: bool,
+    ) -> Result<Response, ScannerManagerError> {
+        let chosen_scanner = self
+            .scanners
             .get(&scanner)
             .ok_or_else(ScannerManagerError::ScannerNotFound)?;
 
-        if production_mode { // maybe let the user configure 'n'?
-            let futures = (0..5).map(|_| {
-                chosen_scanner.scan_files(system_prompt, user_prompt, model)
-            });
+        if production_mode {
+            // maybe let the user configure 'n'?
+            let futures =
+                (0..5).map(|_| chosen_scanner.scan_files(system_prompt, user_prompt, model));
             let results = try_join_all(futures).await?;
             let combined = self.combine_responses(results);
 
-            Ok( chosen_scanner.scan_files(consistency_prompt, &serde_json::to_string(&combined).unwrap(), model).await? )
-        } else{
-            Ok( chosen_scanner.scan_files(system_prompt, user_prompt, model).await? )
+            Ok(chosen_scanner
+                .scan_files(
+                    consistency_prompt,
+                    &serde_json::to_string(&combined).unwrap(),
+                    model,
+                )
+                .await?)
+        } else {
+            Ok(chosen_scanner
+                .scan_files(system_prompt, user_prompt, model)
+                .await?)
         }
     }
 
@@ -81,6 +103,8 @@ impl ScannerManager {
         for response in responses {
             all_issues.extend(response.detected_issues);
         }
-        Response { detected_issues: all_issues }
+        Response {
+            detected_issues: all_issues,
+        }
     }
 }

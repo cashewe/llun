@@ -1,13 +1,13 @@
 use std::fmt;
 
-use serde_json;
-use serde::{Serialize, Deserialize};
 use schemars::schema_for;
+use serde::{Deserialize, Serialize};
+use serde_json;
 
-use crate::rules::{RuleSet};
-use crate::files::{FileSet};
-use crate::data::{PROMPT_DIR};
 use crate::api_client::Response;
+use crate::data::PROMPT_DIR;
+use crate::files::FileSet;
+use crate::rules::RuleSet;
 
 /// errors that can occur in the prompt manager
 #[derive(Debug, thiserror::Error)]
@@ -63,7 +63,6 @@ impl PromptManager {
         let formatted_prompt = prompt_template.replace("{formatted_schema}", &formatted_schema);
 
         Ok(formatted_prompt)
-
     }
 
     /// load in and format the users prompt
@@ -88,7 +87,8 @@ impl PromptManager {
             .to_owned();
 
         if context.is_some() {
-            let contextual_prompt: &str = "\nThe user has also supplied the following additional context: {context}";
+            let contextual_prompt: &str =
+                "\nThe user has also supplied the following additional context: {context}";
             formatted_prompt.push_str(contextual_prompt);
         }
 

@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, Hash, Serialize, Deserialize, Eq, PartialEq)]
 #[serde(rename_all = "lowercase")]
