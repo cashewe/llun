@@ -7,6 +7,6 @@ select = [
 ]
 model = "gpt-4o"
 output_format = [
-    "json"
+    "summary"
 ]
 provider = "openai"
