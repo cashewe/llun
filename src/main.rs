@@ -11,12 +11,14 @@ pub mod data;
 pub mod files;
 pub mod formatters;
 pub mod rules;
+pub mod per_file_ignorer;
 
 pub use api_client::{AvailableScanner, PromptManager, ScannerManager};
 pub use data::DEFAULT_CONFIG;
 pub use files::FileManager;
 pub use formatters::{OutputFormat, OutputManager};
 pub use rules::RuleManager;
+pub use per_file_ignorer::PerFileIgnorer;
 
 /// CLI for the application
 #[derive(Parser)]
@@ -91,6 +93,11 @@ pub struct Args {
     #[arg(long, action = clap::ArgAction::SetTrue)]
     #[serde(default)]
     production_mode: bool,
+
+    /// files to ignore certain rule violations on i.e. 'main.py::RULE01'
+    #[arg(long)]
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    per_file_ignores: Vec<String>,
 }
 
 #[allow(dead_code)] // the codes not dead, just uncalled in the repo
@@ -110,6 +117,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .merge(Serialized::defaults(cli_args))
                 .select("tool.llun")
                 .extract()?;
+
+            let per_file_ignorer = PerFileIgnorer::new(config.per_file_ignores)?;
 
             let files = FileManager::load_from_cli(
                 config.path,
@@ -131,7 +140,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 )
                 .await?;
 
-            output_manager.process_response(&model_response, &config.output_format)?
+            let filtered_response = per_file_ignorer.apply_ignores(model_response);
+
+            output_manager.process_response(&filtered_response, &config.output_format)?
         }
     }
     Ok(())

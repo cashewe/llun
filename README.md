@@ -76,6 +76,14 @@ Llun makes use of a heirarchical configuration under the following rules:
 
 At the moment, Llun does not support any nested configuration. If you require this feature (for instance for a monorepo), feel free to develop it and submit a PR.
 
+### Ignoring Violations
+
+There are several ways to encourage Llun to ignore violations that it is otherwise programmed to detect.
+
+One option is to utilise the comment structure `#NOLLUN: RULENAME` in line in order to encourage Llun to ignore certain violations. **NOTE** this makes use of the LLM so may not be wholly reliable, depending on the specific model you are using to run Llun with.
+
+for a programmtically enforced 'per-file ignore', you can instead make use of the `--per-file-ignores` command, documented in the API guide.
+
 ### API Guide
 
 the following table describes the various methods available to the `llun check` command. It is kept up to date with the currently deployed package.
@@ -88,11 +96,12 @@ the following table describes the various methods available to the `llun check` 
 | `--extend-select` | Extend the rules selected in a lower level of configuration | Any rule code i.e. 'LLUN01' | None |
 | `--ignore` | A rule selected at any point prior to be ignored for the current run | Any rule code i.e. 'LLUN01' | None |
 | `--model` | An openAI model to use to run the check on | Any OpenAI model | "gpt4-o" |
-| `--no-respect-gitignore` | Including this flag will disable the behaviour which automatically `--exclude`s any file in the gitignore (not recommended in case you leak secrets etc...) | NA/A | False |
+| `--no-respect-gitignore` | Including this flag will disable the behaviour which automatically `--exclude`s any file in the gitignore (not recommended in case you leak secrets etc...) | N/A | False |
 | `--output-format` | The format(s) that llun should use for its trace | "json", "azure", "junit", "summary" | "json" |
 | `--provider` | The LLM provider to run the check against | "openai", "azure-openai" | "openai" |
 | `--context`  | Additional ontext the LLM might want to know to guide it i.e. "this is for xyz purpose" or "this will not need to be touched again" | any free text | None |
 | `--production-mode` | boolean flag will run a more powerful (and more expensive) scan when turned on | N/A | False |
+| `--per-file-ignores` | Ignore a certain rule only in a given file, enforced programmatically (i.e. more reliable than #NOLLUN) | anything in the format '<FILENAME>:<RULE>' i.e. './src/main.rs:SOLID01' | None |
 
 This table will be updated as new methods or valid values are encorporated.
 
