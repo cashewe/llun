@@ -1,0 +1,15 @@
+{
+  "name": "Consistency in approach",
+  "description": "Approaches to architectural problems should be consistent across the code base.",
+  "risk_if_violated": "Inconsistency in approach makes code harder to approach and leads to higher change failure rate as the logic becomes harder to reason about.",
+  "examples": [
+    {
+      "violation": "Use of a strategy pattern in one location, and a long list of nested if statements elsewhere.",
+      "better": "The strategy pattern is implemented everywhere that strategies need to be decided on."
+    },
+    {
+        "violation": "Use of strict object oriented design in some modules, with use of strict functional programming elsewhere",
+        "better": "The appropriate paradigm is selected for the whole product, and maintained across modules."
+    }
+  ]
+}

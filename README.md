@@ -56,6 +56,15 @@ If it is running correctly, you should (eventually) see a json formatted respons
 
 **Note** You will need to have set the `OPENAI_API_KEY` variable in your environment to a valid openai api key in order to get valid output from the service. New api keys can be generated at [this address](https://platform.openai.com/api-keys). Users should be cognisant of the associated costs to run their chosen AI model.
 
+**Note** for azure users, you will instead need to set the following variables in your environment:
+
+- `AZURE_OPENAI_API_KEY`
+- `AZURE_OPENAI_ENDPOINT`
+- `AZURE_OPENAI_API_VERSION`
+- `AZURE_OPENAI_DEPLOYMENT`
+
+These variables can be easily accessed from your foundry instance.
+
 ## Configuring Llun
 
 Llun makes use of a heirarchical configuration under the following rules:
