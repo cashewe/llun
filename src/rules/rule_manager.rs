@@ -86,6 +86,10 @@ impl RuleManager {
     }
 
     /// get the final list of selected rules based on the inputs in the config
+    /// combines selected rules and extended selection rules
+    /// expands any selected rule 'families' out into their underlying rules
+    /// then validates them against available rules
+    /// returning a vector of validated selected rules
     pub fn finalise_selected_rules(
         &self,
         config: &RuleSelectionConfig,
@@ -93,13 +97,29 @@ impl RuleManager {
         let mut selected_rules = config.select.clone();
         selected_rules.extend(config.extend_select.clone());
 
+        let mut expanded_rules = Vec::new();
         for rule in &selected_rules {
-            if !self.valid_rules.contains(rule) {
-                return Err(RuleManagerError::InvalidRule(rule.clone()));
+            if rule.len() >= 2 && rule.chars().rev().take(2).all(|c| c.is_ascii_digit()) {
+                if !self.valid_rules.contains(rule) {
+                    return Err(RuleManagerError::InvalidRule(rule.clone()));
+                }
+                expanded_rules.push(rule.clone());
+            } else { // if youve picked a rule family rather than a rule
+                let matching_rules: Vec<String> = self.valid_rules
+                    .iter()
+                    .filter(|valid_rule| valid_rule.starts_with(rule))
+                    .cloned()
+                    .collect();
+                
+                if matching_rules.is_empty() {
+                    return Err(RuleManagerError::InvalidRule(rule.clone()));
+                }
+                
+                expanded_rules.extend(matching_rules);
             }
         }
 
-        let finalised_rules: Vec<String> = selected_rules
+        let finalised_rules: Vec<String> = expanded_rules
             .into_iter()
             .filter(|rule| !config.ignore.contains(rule))
             .collect();

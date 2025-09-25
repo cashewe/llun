@@ -1,9 +1,5 @@
 select = [
-    "LLUN01",
-    "LLUN02",
-    "LLUN03",
-    "LLUN04",
-    "LLUN05"
+    "SOLID"
 ]
 model = "gpt-4o"
 output_format = [
