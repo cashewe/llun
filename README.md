@@ -75,7 +75,7 @@ the following table describes the various methods available to the `llun check` 
 |----------|-------------|--------------|---------|
 | `--path`   | The directorys or files to run llun against | Any paths from root i.e. './XXX' or '.' | None |
 | `--exclude` | A path to be excluded from the targeted directory described by `--path` | Any path from root i.e. './XXX' or '.' | None | 
-| `--select` | A (valid) Llun rule code to apply during the check | Any rule code i.e. 'LLUN01' | ['LLUN01', 'LLUN02', 'LLUN03', 'LLUN04', 'LLUN05'] (the SOLID principles) |
+| `--select` | A (valid) Llun rule code, or Llun rule family to apply during the check | Any rule code i.e. 'LLUN01', or rule family i.e. 'LLUN' to group select all. | ['SOLID'] (a group selection of the five *solid* principles) |
 | `--extend-select` | Extend the rules selected in a lower level of configuration | Any rule code i.e. 'LLUN01' | None |
 | `--ignore` | A rule selected at any point prior to be ignored for the current run | Any rule code i.e. 'LLUN01' | None |
 | `--model` | An openAI model to use to run the check on | Any OpenAI model | "gpt4-o" |
