@@ -109,64 +109,85 @@ This table will be updated as new methods or valid values are encorporated.
 
 The following describes each rule that can be set by Llun. full descriptions can be found in the rule files (`/src/data/rules`). When picking rules it may be tempting to simply turn them all on, but do be aware that older LLM models can become overwhelmed and unreliable when provided too much context - pick the subset of rules you think will most impact the long term success of your products.
 
-#### LLUN01: Single Responsibility Principle
-Each class, function, or module should have one clear responsibility and one reason to change.
+#### SOLID
+The five SOLID principles, individually available
 
-#### LLUN02: Open/Closed Principle
-Software entities should be open for extension but closed for modification.
+- **SOLID01**: Single Responsibility Principle
+  Each class, function, or module should have one clear responsibility and one reason to change.
+
+- **SOLID02**: Open/Closed Principle
+  Software entities should be open for extension but closed for modification.
   
-#### LLUN03: Liskov Substitution Principle
+- **SOLID03**: Liskov Substitution Principle
 Objects of a superclass should be replaceable with objects of its subclasses without affecting the correctness of the program.
   
-#### LLUN04: Interface Segregation Principle
+- **SOLID04**: Interface Segregation Principle
 Clients should not be forced to depend on interfaces they do not use.
   
-#### LLUN05: Dependency Inversion Principle
+- **SOLID05**: Dependency Inversion Principle
 High-level modules should not depend on low-level modules. Both should depend on abstractions.
 
-#### LLUN06: Favour Composition Over Inheritance
+#### CLASSIC
+A selection of other classic coding idonyms and wisdom
+
+- **CLASSIC01**: Favour Composition Over Inheritance
 Build functionality by combining objects that contain other objects, rather than inheriting behavior from parent classes.
   
-#### LLUN07: YAGNI (You Aren't Gonna Need It)
+- **CLASSIC02**: YAGNI (You Aren't Gonna Need It)
 Don't implement functionality until it's actually required. Build only what you need right now, not what you think you might need later.
 
-#### LLUN08: KISS (Keep It Simple, Stupid)
+- **CLASSIC03**: KISS (Keep It Simple, Stupid)
 Choose the simplest solution that solves the problem effectively. Avoid unnecessary complexity in design and implementation.
   
-#### LLUN09: Keep Functions Pure
-Functions should always return the same output for the same input and have no side effects (don't modify external state or perform I/O operations).
-  
-#### LLUN10: Use Ubiquitous Language
-Use the same terminology and concepts throughout the codebase, documentation, and conversations that domain experts use in the real business context.
-  
-#### LLUN11: Keep Context Bounded
-Define clear boundaries where specific domain models and business rules apply. Different parts of the system can have different interpretations of the same concept.
-  
-#### LLUN12: Convention Over Configuration
-Provide sensible defaults and follow established patterns so developers can be productive without extensive setup or decision-making about common scenarios.
-  
-#### LLUN13: Strategy Pattern
-Define a family of algorithms or behaviors, encapsulate each one, and make them interchangeable at runtime based on context or configuration.
-  
-#### LLUN14: Dependency Injection
-Provide dependencies to a class from the outside rather than creating them internally. Dependencies should be injected through constructors, methods, or properties.
-  
-#### LLUN15: Facade Pattern
-Provide a simplified interface to a complex subsystem by creating a single entry point that coordinates multiple underlying components.
-  
-#### LLUN16: Repository Pattern
-Encapsulate data access logic behind an interface that mimics a collection of domain objects, separating business logic from data persistence concerns.
+- **CLASSIC04**: Consistency in approach
+Approaches to architectural problems should be consistent across the code base.
 
-#### LLUN17: Idempotency
-Operations should produce the same result when called multiple times with the same parameters. Repeated calls should not cause additional side effects or change the system state further.
-
-#### LLUN18: Minimize Stateful Objects
+- **CLASSIC05**: Minimize Stateful Objects
 Prefer stateless objects and immutable data structures. Keep mutable state localized and explicit, rather than spreading it throughout your object hierarchy.
 
-#### LLUN19: Immutable Objects
+#### DOMAIN
+A selection of rules relating to domain driven design principles
+
+- **DOMAIN01**: Use Ubiquitous Language
+Use the same terminology and concepts throughout the codebase, documentation, and conversations that domain experts use in the real business context.
+
+- **DOMAIN02**: Keep Context Bounded
+Define clear boundaries where specific domain models and business rules apply. Different parts of the system can have different interpretations of the same concept.
+  
+- **DOMAIN03**: Convention Over Configuration
+Provide sensible defaults and follow established patterns so developers can be productive without extensive setup or decision-making about common scenarios.
+
+#### FUNCTIONAL
+A selection of rules based on functional programming paradimes 
+
+- **FUNCTIONAL01**: Keep Functions Pure
+Functions should always return the same output for the same input and have no side effects (don't modify external state or perform I/O operations).
+
+- **FUNCTIONAL02**: Idempotency
+Operations should produce the same result when called multiple times with the same parameters. Repeated calls should not cause additional side effects or change the system state further.
+
+- **FUNCTIONAL03**: Immutable Objects
 Create objects whose state cannot be modified after construction. When changes are needed, return new instances rather than modifying existing ones.
 
-#### LLUN20: Test behaviour, not implementation
+#### PATTERN
+A selection of coding patterns to situationally apply
+
+- **PATTERN01**: Strategy Pattern
+Define a family of algorithms or behaviors, encapsulate each one, and make them interchangeable at runtime based on context or configuration.
+  
+- **PATTERN02**: Dependency Injection
+Provide dependencies to a class from the outside rather than creating them internally. Dependencies should be injected through constructors, methods, or properties.
+  
+- **PATTERN03** : Facade Pattern
+Provide a simplified interface to a complex subsystem by creating a single entry point that coordinates multiple underlying components.
+  
+- **PATTERN04**: Repository Pattern
+Encapsulate data access logic behind an interface that mimics a collection of domain objects, separating business logic from data persistence concerns.
+
+#### TEST
+Rules to be applied to testing practices specifically
+
+- **TEST01**: Test behaviour, not implementation
 Write tests that verify the system's externally visible behavior rather than its internal implementation details.
 
 #### Custom Rules
