@@ -17,7 +17,7 @@ impl OutputFormatter for SummaryFormatter {
         for issue in &response.detected_issues {
             issues_by_file
                 .entry(issue.file_path.clone())
-                .or_insert_with(Vec::new)
+                .or_default()
                 .push(issue);
         }
 

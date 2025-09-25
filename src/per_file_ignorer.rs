@@ -63,7 +63,7 @@ impl PerFileIgnorer {
         }
         
         ignores.entry(file_path.to_string())
-            .or_insert_with(Vec::new)
+            .or_default()
             .extend(rules);
             
         Ok(())
@@ -71,14 +71,13 @@ impl PerFileIgnorer {
 
     /// if a given rule / filepath combo should be being ignored or not
     pub fn should_ignore(&self, file_path: &str, rule_code: &str) -> bool {
-        if let Some(ignored_rules) = self.ignores.get(file_path) {
-            if ignored_rules.contains(&rule_code.to_string()) {
+        if let Some(ignored_rules) = self.ignores.get(file_path)
+            && ignored_rules.contains(&rule_code.to_string()) {
                 return true;
             }
-        }
         
         for (ignore_path, ignored_rules) in &self.ignores {
-            if Self::path_matches(&file_path, ignore_path) && ignored_rules.contains(&rule_code.to_string()) {
+            if Self::path_matches(file_path, ignore_path) && ignored_rules.contains(&rule_code.to_string()) {
                 return true;
             }
         }
@@ -105,11 +104,7 @@ impl PerFileIgnorer {
 
     /// entryway to ignorance
     pub fn apply_ignores(&self, mut response: Response) -> Response {
-        response.detected_issues = response
-            .detected_issues
-            .into_iter()
-            .filter(|issue| !self.should_ignore(&issue.file_path, &issue.rule_code))
-            .collect();
+        response.detected_issues.retain(|issue| !self.should_ignore(&issue.file_path, &issue.rule_code));
             
         response
     }
