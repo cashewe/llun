@@ -1,8 +1,0 @@
-select = [
-    "SOLID"
-]
-model = "gpt-4o"
-output_format = [
-    "summary"
-]
-provider = "openai"
