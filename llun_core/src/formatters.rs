@@ -11,5 +11,5 @@ pub use json_formatter::JsonFormatter;
 pub use junit_formatter::JunitFormatter;
 pub use output_format::OutputFormat;
 pub use output_formatter::{OutputFormatter, OutputFormatterError};
-pub use output_manager::OutputManager;
+pub use output_manager::{OutputManager, OutputManagerError};
 pub use summary_formatter::SummaryFormatter;
