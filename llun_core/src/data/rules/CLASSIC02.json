@@ -1,0 +1,11 @@
+{
+  "name": "YAGNI (You Aren't Gonna Need It)",
+  "description": "Don't implement functionality until it's actually required. Build only what you need right now, not what you think you might need later.",
+  "risk_if_violated": "Over-engineering leads to wasted development time, increased complexity, more bugs, and code that's harder to maintain. Premature abstractions often don't match actual future requirements.",
+  "examples": [
+    {
+      "violation": "Building a complex plugin architecture and configuration system for a simple internal tool because 'we might need flexibility later'.",
+      "better": "Start with a straightforward implementation. Add flexibility only when concrete requirements emerge."
+    }
+  ]
+}

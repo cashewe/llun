@@ -1,0 +1,11 @@
+{
+  "name": "Keep Context Bounded",
+  "description": "Define clear boundaries where specific domain models and business rules apply. Different parts of the system can have different interpretations of the same concept.",
+  "risk_if_violated": "Trying to use the same model everywhere leads to bloated, confusing objects that try to serve too many purposes. Changes in one area unexpectedly break other areas.",
+  "examples": [
+    {
+      "violation": "Using the same 'User' model for authentication, billing, customer support, and marketing, resulting in a massive class with conflicting responsibilities.",
+      "better": "Create separate models like 'AuthenticatedUser', 'BillingCustomer', and 'MarketingContact' within their respective bounded contexts."
+    }
+  ]
+}

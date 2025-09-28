@@ -1,0 +1,11 @@
+{
+  "name": "Single Responsibility Principle",
+  "description": "Each class, function, or module should have one clear responsibility and one reason to change.",
+  "risk_if_violated": "Mixing multiple responsibilities creates tight coupling, makes code harder to test, and increases the risk of introducing bugs when modifying one behavior.",
+  "examples": [
+    {
+      "violation": "A class that handles both HTTP request parsing and business logic.",
+      "better": "Create a controller to handle HTTP parsing and delegate business logic to a service."
+    }
+  ]
+}

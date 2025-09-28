@@ -1,0 +1,11 @@
+{
+  "name": "Interface Segregation Principle",
+  "description": "Clients should not be forced to depend on interfaces they do not use.",
+  "risk_if_violated": "Large, 'fat' interfaces force implementing classes to include unnecessary methods, increasing complexity and risk of breaking changes.",
+  "examples": [
+    {
+      "violation": "An interface with 10 methods where most implementations only use 2 of them.",
+      "better": "Split the interface into smaller, more specific ones so clients only implement what they need."
+    }
+  ]
+}

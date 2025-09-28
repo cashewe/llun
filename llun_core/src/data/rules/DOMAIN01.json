@@ -1,0 +1,11 @@
+{
+  "name": "Use Ubiquitous Language",
+  "description": "Use the same terminology and concepts throughout the codebase, documentation, and conversations that domain experts use in the real business context.",
+  "risk_if_violated": "Miscommunication between developers and business stakeholders leads to building the wrong features. Code becomes confusing when technical terms don't match business concepts.",
+  "examples": [
+    {
+      "violation": "Developers calling it 'UserAccount' while business people call it 'Customer Profile', leading to confusion in requirements and code reviews.",
+      "better": "Agree on terminology with business stakeholders and use 'Customer Profile' consistently in code, tests, and documentation."
+    }
+  ]
+}

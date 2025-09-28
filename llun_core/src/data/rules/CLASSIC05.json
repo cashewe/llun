@@ -1,0 +1,15 @@
+{
+  "name": "Minimize Stateful Objects",
+  "description": "Prefer stateless objects and immutable data structures. Keep mutable state localized and explicit, rather than spreading it throughout your object hierarchy.",
+  "risk_if_violated": "Excessive state makes objects harder to reason about, test, and debug. Shared mutable state leads to race conditions and unpredictable behavior in concurrent environments.",
+  "examples": [
+    {
+      "violation": "A calculator class that maintains running totals and operation history as instance variables, making it unusable for concurrent calculations.",
+      "better": "Make calculation methods pure functions that take inputs and return results without modifying instance state."
+    },
+    {
+      "violation": "A service class that caches the last API response in an instance variable, causing incorrect results when used by multiple threads.",
+      "better": "Return fresh data or use explicit caching mechanisms (like dependency-injected cache services) that handle concurrency properly."
+    }
+  ]
+}

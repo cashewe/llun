@@ -1,0 +1,11 @@
+{
+  "name": "Favour Composition Over Inheritance",
+  "description": "Build functionality by combining objects that contain other objects, rather than inheriting behavior from parent classes.",
+  "risk_if_violated": "Deep inheritance hierarchies become fragile and hard to modify. Changes to base classes can break multiple derived classes, and it becomes difficult to reuse code in different contexts.",
+  "examples": [
+    {
+      "violation": "Creating a FlyingCar class that inherits from both Car and Aircraft, leading to diamond problem and conflicting methods.",
+      "better": "Create a Vehicle class that contains Engine and Navigation components, allowing flexible combination of behaviors."
+    }
+  ]
+}

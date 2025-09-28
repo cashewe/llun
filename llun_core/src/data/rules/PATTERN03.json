@@ -1,0 +1,15 @@
+{
+  "name": "Facade Pattern",
+  "description": "Provide a simplified interface to a complex subsystem by creating a single entry point that coordinates multiple underlying components.",
+  "risk_if_violated": "Without a facade, clients must understand and interact with many complex internal components, leading to tight coupling and duplicated integration logic.",
+  "examples": [
+    {
+      "violation": "Every controller directly calling PaymentGateway, TaxCalculator, InventoryService, and EmailService to process an order, duplicating this logic everywhere.",
+      "better": "Create an OrderProcessingFacade that orchestrates these services, providing a single processOrder() method."
+    },
+    {
+      "violation": "Creating a facade for a single, simple service that doesn't need simplification, adding unnecessary indirection.",
+      "better": "Use facades only when coordinating multiple services or hiding genuine complexity. Simple services can be used directly."
+    }
+  ]
+}

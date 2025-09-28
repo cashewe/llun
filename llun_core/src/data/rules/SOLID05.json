@@ -1,0 +1,11 @@
+{
+  "name": "Dependency Inversion Principle",
+  "description": "High-level modules should not depend on low-level modules. Both should depend on abstractions.",
+  "risk_if_violated": "Directly depending on concrete implementations makes it harder to change behavior, swap dependencies, or unit test code.",
+  "examples": [
+    {
+      "violation": "A service directly instantiates a concrete database client.",
+      "better": "Inject a database interface into the service so different implementations can be substituted."
+    }
+  ]
+}

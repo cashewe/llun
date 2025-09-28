@@ -42,3 +42,4 @@ dependencies = [
 [tool.maturin]
 bindings = "bin"
 strip = true
+manifest-path = "llun_cli/Cargo.toml"

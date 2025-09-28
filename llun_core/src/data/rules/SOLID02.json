@@ -1,0 +1,11 @@
+{
+  "name": "Open/Closed Principle",
+  "description": "Software entities should be open for extension but closed for modification.",
+  "risk_if_violated": "When adding new features requires modifying existing code, you risk introducing regressions and breaking existing functionality.",
+  "examples": [
+    {
+      "violation": "A switch statement that must be updated whenever a new payment type is added.",
+      "better": "Define a common interface for payment processors and add new implementations without modifying existing code."
+    }
+  ]
+}

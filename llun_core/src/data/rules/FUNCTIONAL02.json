@@ -1,0 +1,15 @@
+{
+  "name": "Idempotency",
+  "description": "Operations should produce the same result when called multiple times with the same parameters. Repeated calls should not cause additional side effects or change the system state further.",
+  "risk_if_violated": "Non-idempotent operations can cause data corruption, duplicate processing, or inconsistent states when network retries, user double-clicks, or system failures occur.",
+  "examples": [
+    {
+      "violation": "A processPayment() method that charges the credit card every time it's called, even with the same transaction ID.",
+      "better": "Check if a transaction with the same ID already exists and return the existing result instead of processing again."
+    },
+    {
+      "violation": "An updateUserProfile() method that appends tags to a user's profile on every call, creating duplicates.",
+      "better": "Replace the entire tag list or check for existing tags before adding, ensuring the same final state regardless of call count."
+    }
+  ]
+}

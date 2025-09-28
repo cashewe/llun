@@ -1,0 +1,11 @@
+{
+  "name": "Convention Over Configuration",
+  "description": "Provide sensible defaults and follow established patterns so developers can be productive without extensive setup or decision-making about common scenarios.",
+  "risk_if_violated": "Requiring explicit configuration for every detail slows development and creates opportunities for misconfiguration. Inconsistent approaches across the codebase confuse new team members.",
+  "examples": [
+    {
+      "violation": "Requiring developers to manually configure database table names, column mappings, and validation rules for every model class.",
+      "better": "Automatically map User class to 'users' table with standard naming conventions, allowing overrides only when needed."
+    }
+  ]
+}

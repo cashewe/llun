@@ -1,0 +1,11 @@
+{
+  "name": "Keep Functions Pure",
+  "description": "Functions should always return the same output for the same input and have no side effects (don't modify external state or perform I/O operations).",
+  "risk_if_violated": "Impure functions make code unpredictable and hard to test. Hidden dependencies and side effects lead to bugs that are difficult to reproduce and debug.",
+  "examples": [
+    {
+      "violation": "A calculateTotal() function that modifies a global variable, makes API calls, and returns different results based on the current time.",
+      "better": "Pass all required data as parameters and return only the calculated result, keeping I/O operations separate."
+    }
+  ]
+}

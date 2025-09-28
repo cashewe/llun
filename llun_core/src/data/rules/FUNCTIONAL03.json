@@ -1,0 +1,15 @@
+{
+  "name": "Immutable Objects",
+  "description": "Create objects whose state cannot be modified after construction. When changes are needed, return new instances rather than modifying existing ones.",
+  "risk_if_violated": "Mutable objects can be accidentally modified by other parts of the code, leading to unexpected behavior and difficult-to-trace bugs, especially when objects are shared across methods or threads.",
+  "examples": [
+    {
+      "violation": "A Money class with setter methods that allow changing the amount after creation, causing confusion when the same Money instance is used in multiple calculations.",
+      "better": "Create Money objects with final fields and provide methods like add() or multiply() that return new Money instances."
+    },
+    {
+      "violation": "Making every simple data structure immutable, including large collections that are frequently modified in tight loops.",
+      "better": "Use immutability for value objects and shared data, but consider mutable structures for performance-critical scenarios with frequent modifications."
+    }
+  ]
+}

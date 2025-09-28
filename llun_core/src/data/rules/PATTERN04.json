@@ -1,0 +1,15 @@
+{
+  "name": "Repository Pattern",
+  "description": "Encapsulate data access logic behind an interface that mimics a collection of domain objects, separating business logic from data persistence concerns.",
+  "risk_if_violated": "Direct database access in business logic creates tight coupling to specific data technologies and makes testing difficult without a real database.",
+  "examples": [
+    {
+      "violation": "Service classes containing SQL queries and database connection logic mixed with business rules.",
+      "better": "Create IUserRepository interface with methods like findByEmail(), allowing business logic to work with domain concepts."
+    },
+    {
+      "violation": "Creating separate repositories for every single database table, even for simple lookup tables that never change.",
+      "better": "Use repositories for aggregate roots and complex queries. Simple reference data can be accessed directly or cached."
+    }
+  ]
+}

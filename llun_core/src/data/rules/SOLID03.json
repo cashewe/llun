@@ -1,0 +1,11 @@
+{
+  "name": "Liskov Substitution Principle",
+  "description": "Objects of a superclass should be replaceable with objects of its subclasses without affecting the correctness of the program.",
+  "risk_if_violated": "Subclasses that break expected behavior make code unpredictable and can introduce runtime errors when used polymorphically.",
+  "examples": [
+    {
+      "violation": "A subclass overriding a method and throwing an error for inputs the base class accepts.",
+      "better": "Ensure the subclass behavior respects the contract defined by the base class, or refactor to use composition instead of inheritance."
+    }
+  ]
+}

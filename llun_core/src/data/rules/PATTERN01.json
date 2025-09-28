@@ -1,0 +1,15 @@
+{
+  "name": "Strategy Pattern",
+  "description": "Define a family of algorithms or behaviors, encapsulate each one, and make them interchangeable at runtime based on context or configuration.",
+  "risk_if_violated": "Complex conditional logic with multiple if/else or switch statements becomes hard to maintain and violates the Open/Closed Principle when new behaviors are needed.",
+  "examples": [
+    {
+      "violation": "A pricing calculator with a large switch statement handling different customer types, requiring code changes for every new pricing strategy.",
+      "better": "Create IPricingStrategy interface with implementations like StandardPricing, PremiumPricing, allowing new strategies without modifying existing code."
+    },
+    {
+      "violation": "Using Strategy pattern for a simple binary choice that's unlikely to change or expand.",
+      "better": "Simple if/else statements are fine for stable, binary decisions. Reserve Strategy for scenarios with multiple, evolving behaviors."
+    }
+  ]
+}

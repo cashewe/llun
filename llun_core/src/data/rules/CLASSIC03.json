@@ -1,0 +1,11 @@
+{
+  "name": "KISS (Keep It Simple, Stupid)",
+  "description": "Choose the simplest solution that solves the problem effectively. Avoid unnecessary complexity in design and implementation.",
+  "risk_if_violated": "Complex solutions are harder to understand, debug, and maintain. They increase the chance of bugs and make it difficult for team members to contribute effectively.",
+  "examples": [
+    {
+      "violation": "Using a machine learning algorithm to determine if a number is even, when a simple modulo operation would suffice.",
+      "better": "Use straightforward conditional logic and well-known patterns that any developer can quickly understand."
+    }
+  ]
+}

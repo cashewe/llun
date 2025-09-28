@@ -1,0 +1,15 @@
+{
+  "name": "Dependency Injection",
+  "description": "Provide dependencies to a class from the outside rather than creating them internally. Dependencies should be injected through constructors, methods, or properties.",
+  "risk_if_violated": "Hard-coded dependencies create tight coupling, make unit testing difficult, and prevent flexibility in different environments (testing, staging, production).",
+  "examples": [
+    {
+      "violation": "A UserService class that creates its own DatabaseConnection and EmailSender internally, making it impossible to test without hitting real infrastructure.",
+      "better": "Inject IUserRepository and IEmailService through the constructor, allowing mock implementations during testing."
+    },
+    {
+      "violation": "Using dependency injection for simple value objects or primitive calculations that don't need substitution.",
+      "better": "Reserve DI for services, repositories, and external dependencies. Simple value objects can be created directly."
+    }
+  ]
+}
