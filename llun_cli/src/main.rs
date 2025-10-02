@@ -5,6 +5,7 @@ use figment::{
 };
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use tracing::{info, debug};
 
 use llun_core::api_client::{AvailableScanner, PromptManager, ScannerManager};
 use llun_core::data::DEFAULT_CONFIG;
@@ -12,6 +13,9 @@ use llun_core::files::FileManager;
 use llun_core::formatters::{OutputFormat, OutputManager};
 use llun_core::rules::RuleManager;
 use llun_core::per_file_ignorer::PerFileIgnorer;
+
+pub mod logging;
+use logging::init_tracing;
 
 /// CLI for the application
 #[derive(Parser)]
@@ -91,15 +95,16 @@ pub struct Args {
     #[arg(long)]
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     per_file_ignores: Vec<String>,
+
+    /// verbosity of the command, stacks with more 'v's
+    #[arg(short = 'v', action = clap::ArgAction::Count)]
+    verbose: u8,
 }
 
 #[allow(dead_code)] // the codes not dead, just uncalled in the repo
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
-    let rule_manager = RuleManager::new()?;
-    let scanner_manager = ScannerManager::new()?;
-    let output_manager = OutputManager::new();
 
     match cli.command {
         Commands::Check(cli_args) => {
@@ -111,17 +116,28 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .select("tool.llun")
                 .extract()?;
 
+            init_tracing(config.verbose);
+            info!("Beginning application...");
+
+            debug!("Setting up managers...");
+            let rule_manager = RuleManager::new()?;
+            let scanner_manager = ScannerManager::new()?;
+            let output_manager = OutputManager::new();
             let per_file_ignorer = PerFileIgnorer::new(config.per_file_ignores)?;
 
+            debug!("Reading selected files...");
             let files = FileManager::load_from_cli(
                 config.path,
                 config.exclude,
                 config.no_respect_gitignore,
             )?;
+            debug!("Loading selected rules...");
             let rules =
                 rule_manager.load_from_cli(config.select, config.extend_select, config.ignore)?;
 
             let prompt_manager = PromptManager::new(&rules, &files, &config.context)?;
+
+            debug!("Querying selected endpoint...");
             let model_response = scanner_manager
                 .run_scan(
                     &prompt_manager.system_prompt_scan,
@@ -135,6 +151,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             let filtered_response = per_file_ignorer.apply_ignores(model_response);
 
+            debug!("Processing response...");
             output_manager.process_response(&filtered_response, &config.output_format)?
         }
     }

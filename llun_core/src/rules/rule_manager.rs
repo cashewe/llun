@@ -1,6 +1,7 @@
 use crate::data::RULES_DIR;
 use crate::rules::{Rule, RuleSet};
 use std::collections::HashSet;
+use tracing::debug;
 
 // claude suggested these custom errors
 #[derive(Debug, thiserror::Error)]
@@ -158,6 +159,7 @@ impl RuleManager {
                 Err(e) => return Err(RuleManagerError::RuleSetLoadError(e.to_string())),
             }
         }
+        debug!("Loaded rules: {0}", &collection);
         Ok(collection)
     }
 

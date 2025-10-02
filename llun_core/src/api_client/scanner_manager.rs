@@ -3,6 +3,7 @@ use crate::api_client::{
 };
 use futures::future::try_join_all;
 use std::collections::HashMap;
+use tracing::debug;
 
 #[derive(Debug, thiserror::Error)]
 pub enum ScannerManagerError {
@@ -55,7 +56,7 @@ impl ScannerManager {
                 scanners.insert(scanner_type, Box::new(scanner));
             }
             Err(e) => {
-                eprintln!("Failed to initialize scanner: {}", e);
+                debug!("Failed to initialize scanner: {}", e);
             }
         }
     }

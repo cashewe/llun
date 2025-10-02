@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use tracing::{debug};
 use crate::api_client::Response;
 
 #[derive(Debug, thiserror::Error)]
@@ -26,9 +27,11 @@ pub struct PerFileIgnorer {
 impl PerFileIgnorer {
     /// create an ignorer for the chosen ignore rules
     pub fn new(per_file_ignores: Vec<String>) -> Result<Self, PerFileIgnorerError> {
+        debug!("setting up PerFileIgnorer");
         let mut ignores = HashMap::new();
         
         for ignore_spec in per_file_ignores {
+            debug!("Setting up ignorer for {0}", &ignore_spec);
             Self::parse_ignore_spec(&ignore_spec, &mut ignores)?;
         }
         

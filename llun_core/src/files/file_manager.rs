@@ -2,6 +2,7 @@ use ignore::WalkBuilder;
 use std::collections::HashSet;
 use std::io;
 use std::path::{Path, PathBuf};
+use tracing::debug;
 
 use crate::files::{File, FileError, FileSet};
 
@@ -57,6 +58,7 @@ impl FileManager {
                 Err(e) => return Err(FileManagerError::FileReadError(e)),
             }
         }
+        debug!("Loaded files: {}", &collection);
         Ok(collection)
     }
 
@@ -99,7 +101,6 @@ impl FileManager {
                 files.push(path.to_path_buf());
             }
         }
-
         Ok(files)
     }
 
