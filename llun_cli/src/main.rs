@@ -5,7 +5,7 @@ use figment::{
 };
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
-use tracing::{info, debug};
+use tracing::info;
 
 use llun_core::api_client::{AvailableScanner, PromptManager, ScannerManager};
 use llun_core::data::DEFAULT_CONFIG;
@@ -119,25 +119,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             init_tracing(config.verbose);
             info!("Beginning application...");
 
-            debug!("Setting up managers...");
+            info!("Setting up managers...");
             let rule_manager = RuleManager::new()?;
             let scanner_manager = ScannerManager::new()?;
             let output_manager = OutputManager::new();
             let per_file_ignorer = PerFileIgnorer::new(config.per_file_ignores)?;
 
-            debug!("Reading selected files...");
+            info!("Reading selected files...");
             let files = FileManager::load_from_cli(
                 config.path,
                 config.exclude,
                 config.no_respect_gitignore,
             )?;
-            debug!("Loading selected rules...");
+            info!("Loading selected rules...");
             let rules =
                 rule_manager.load_from_cli(config.select, config.extend_select, config.ignore)?;
 
             let prompt_manager = PromptManager::new(&rules, &files, &config.context)?;
 
-            debug!("Querying selected endpoint...");
+            info!("Querying selected endpoint...");
             let model_response = scanner_manager
                 .run_scan(
                     &prompt_manager.system_prompt_scan,
@@ -151,7 +151,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             let filtered_response = per_file_ignorer.apply_ignores(model_response);
 
-            debug!("Processing response...");
+            info!("Processing response...");
             output_manager.process_response(&filtered_response, &config.output_format)?
         }
     }
