@@ -42,6 +42,7 @@ pub struct LlunServer {
 #[tool_router]
 impl LlunServer {
     pub fn new() -> Self {
+        info!("setting up tools");
         Self { tool_router: Self::tool_router() } // tool_router comes from #[tool_router]
     }
 
@@ -90,7 +91,7 @@ impl ServerHandler for LlunServer {
     /// sent to clients when they connect to the llun server
     fn get_info(&self) -> ServerInfo {
         ServerInfo{
-            protocol_version: ProtocolVersion::LATEST,
+            protocol_version: ProtocolVersion::V_2024_11_05,
             capabilities: ServerCapabilities::builder().enable_tools().build(),
             server_info: Implementation::from_build_env(),
             instructions: Some("Server which uses the popular 'Llun' tool to provide user defined architectural rules which must be followed when engineering new solutions.".to_string())
@@ -101,9 +102,9 @@ impl ServerHandler for LlunServer {
     async fn initialize(
         &self,
         _request: InitializeRequestParam,
-        _context: RequestContext<RoleServer>,
+        context: RequestContext<RoleServer>,
     ) -> Result<InitializeResult, McpError> {
-        info!("Client connected");
+        info!("initialising stdio server");
         Ok(self.get_info())
     }
 }

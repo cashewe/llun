@@ -2,6 +2,6 @@
 members = [
     "llun_core",
     "llun_cli",
-    "llun_mcp"
+    "llun_mcp",
 ]
 resolver = "2"

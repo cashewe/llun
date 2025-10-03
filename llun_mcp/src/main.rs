@@ -1,7 +1,7 @@
 use llun_mcp::LlunServer;
 use rmcp::{transport::stdio, ServiceExt};
 use tracing_subscriber::{self, EnvFilter};
-use tracing::info;
+use tracing::{info, error};
 
 /// Run with: npx @modelcontextprotocol/inspector cargo run --bin llun-mcp
 #[tokio::main]
@@ -21,8 +21,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .serve(stdio())
         .await
         .inspect_err(|e| {
-            tracing::error!("Server error: {:?}", e);
+            error!("Server error: {:?}", e);
         })?;
+
+    info!("defined service successfully");
 
     service.waiting().await?;    
     tracing::info!("llun MCP server shut down");
