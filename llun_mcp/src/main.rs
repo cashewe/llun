@@ -13,6 +13,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         )
         .with_writer(std::io::stderr)
         .with_ansi(false)
+        .with_target(false)
+        .compact()
         .init();
 
     info!("Starting llun MCP server");
@@ -24,9 +26,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             error!("Server error: {:?}", e);
         })?;
 
-    info!("defined service successfully");
-
     service.waiting().await?;    
-    tracing::info!("llun MCP server shut down");
     Ok(())
 }

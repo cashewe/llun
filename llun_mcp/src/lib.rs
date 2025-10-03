@@ -47,7 +47,7 @@ impl LlunServer {
     }
 
     /// MCP 'tool' for accessing the users selected rules and returning them to the agent
-    #[tool(description="Get a user defined selection of architectural rules, patterns and principles that should be followed when building new solutions. Call this tool prior to beginning coding or design tasks in order to fully understand the required context for the users specification.")]
+    #[tool(description = "Get a user defined selection of architectural rules, patterns and principles that should be followed when building new solutions. Call this tool prior to beginning coding or design tasks in order to fully understand the required context for the users specification.")]
     async fn get_rules(&self) -> Result<CallToolResult, McpError> {
         // assume user runs this from root... im not sure how else to do it really?
         let config: RulesArgs = Figment::new()
@@ -102,7 +102,7 @@ impl ServerHandler for LlunServer {
     async fn initialize(
         &self,
         _request: InitializeRequestParam,
-        context: RequestContext<RoleServer>,
+        _context: RequestContext<RoleServer>,
     ) -> Result<InitializeResult, McpError> {
         info!("initialising stdio server");
         Ok(self.get_info())
