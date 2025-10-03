@@ -33,7 +33,7 @@ pub struct RulesArgs {
 }
 
 /// MCP Server
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct LlunServer {
     tool_router: rmcp::handler::server::router::tool::ToolRouter<LlunServer>
 }
