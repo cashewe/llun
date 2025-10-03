@@ -1,6 +1,6 @@
 {
   "name": "llun-mcp",
-  "version": "0.0.1",
+  "version": "1.4.0",
   "description": "LLUN MCP (stdio) server - installer wrapper",
   "bin": {
     "llun-mcp": "bin/llun-mcp"
