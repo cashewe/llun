@@ -1,0 +1,23 @@
+{
+  "name": "llun-mcp",
+  "version": "0.0.1",
+  "description": "LLUN MCP (stdio) server - installer wrapper",
+  "bin": {
+    "llun-mcp": "bin/llun-mcp"
+  },
+  "scripts": {
+    "install": "node ./install.js"
+  },
+  "files": [
+    "install.js",
+    "bin/"
+  ],
+  "engines": {
+    "node": ">=14"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cashewe/llun.git"
+  }
+}

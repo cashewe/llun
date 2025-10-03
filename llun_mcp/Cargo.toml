@@ -4,7 +4,7 @@ version = "1.3.1"
 edition = "2024"
 
 [[bin]]
-name = "llun_mcp"
+name = "llun-mcp"
 path = "src/main.rs"
 
 [dependencies]
