@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "llun_core",
-    "llun_cli"
+    "llun_cli",
+    "llun_mcp"
 ]
 resolver = "2"
