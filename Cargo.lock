@@ -1135,7 +1135,7 @@ dependencies = [
 
 [[package]]
 name = "llun_core"
-version = "1.4.2"
+version = "1.4.3"
 dependencies = [
  "async-openai",
  "async-trait",
@@ -1152,7 +1152,7 @@ dependencies = [
 
 [[package]]
 name = "llun_mcp"
-version = "1.4.2"
+version = "1.4.3"
 dependencies = [
  "axum",
  "figment",
