@@ -83,4 +83,4 @@ jobs:
       working-directory: llun_mcp
       env:
         MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-      run: maturin publish --skip-existing --release
+      run: maturin publish --skip-existing
