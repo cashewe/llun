@@ -29,7 +29,6 @@ Llun does this by providing a number of useful tools:
 
 - `check`, a command line tool for providing a linting-esque review of code using a user specified LLM
 - `context`, which creates or updates AGENTS or copilot-instructions files with the users selected rules
-- `llun-mcp`, which can be directly called by MCP agents to access user selected rules or perform reviews
 
 ## Quick Start
 
@@ -48,8 +47,6 @@ or for those not yet ready to migrate to uv:
 ```
 pip install llun
 ```
-
-For users looking to utilise the MCP tool, a separate install of `llun-mcp` is required, which can be done via either of the above methods by simply replacing `llun` with `llun-mcp`.
 
 to check installation has worked, run `llun` in the command line to view the help menu for the application.
 
