@@ -25,6 +25,12 @@ Perfect for teams that want to:
 - Standardize architectural feedback across code reviews
 - Prefer systematic automation over ad-hoc creative decisions
 
+Llun does this by providing a number of useful tools:
+
+- `check`, a command line tool for providing a linting-esque review of code using a user specified LLM
+- `context`, which creates or updates AGENTS or copilot-instructions files with the users selected rules
+- `llun-mcp`, which can be directly called by MCP agents to access user selected rules or perform reviews
+
 ## Quick Start
 
 Follow this guide to get up and running ASAP
@@ -42,6 +48,8 @@ or for those not yet ready to migrate to uv:
 ```
 pip install llun
 ```
+
+For users looking to utilise the MCP tool, a separate install of `llun-mcp` is required, which can be done via either of the above methods by simply replacing `llun` with `llun-mcp`.
 
 to check installation has worked, run `llun` in the command line to view the help menu for the application.
 
@@ -64,6 +72,14 @@ If it is running correctly, you should (eventually) see a json formatted respons
 - `AZURE_OPENAI_DEPLOYMENT`
 
 These variables can be easily accessed from your foundry instance.
+
+for users of agentic setups, you will instead need to run the command:
+
+```
+llun context agent-format "agents" # / "copilot-instructions" (pick based on your chosen agentic executor)
+```
+
+in order to update your preferred file.
 
 ## Configuring Llun
 
@@ -103,7 +119,14 @@ the following table describes the various methods available to the `llun check` 
 | `--production-mode` | boolean flag will run a more powerful (and more expensive) scan when turned on | N/A | False |
 | `--per-file-ignores` | Ignore a certain rule only in a given file, enforced programmatically (i.e. more reliable than #NOLLUN) | anything in the format '<FILENAME>:<RULE>' i.e. './src/main.rs:SOLID01' | None |
 
-This table will be updated as new methods or valid values are encorporated.
+the following table describes the various methods available to the `llun context` command. It is kept up to date with the currently deployed package.
+
+| Argument | Description | Valid Values | Default |
+|----------|-------------|--------------|---------|
+| `--select` | A (valid) Llun rule code, or Llun rule family to apply during the check | Any rule code i.e. 'LLUN01', or rule family i.e. 'LLUN' to group select all. | ['SOLID'] (a group selection of the five *solid* principles) |
+| `--extend-select` | Extend the rules selected in a lower level of configuration | Any rule code i.e. 'LLUN01' | None |
+| `--ignore` | A rule selected at any point prior to be ignored for the current run | Any rule code i.e. 'LLUN01' | None |
+| `--agent-format` | The format of agent configuration you are using | 'agents' for AGENTS.md or 'copilot-instructions' for .github/copilot-instructions.md | 'agents' |
 
 ### Rule Guide
 
