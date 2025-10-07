@@ -29,14 +29,14 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Commands {
     #[command(about = "Run LLM based architectural survey")]
-    Check(Args),
+    Check(CheckArgs),
 }
 
 /// Arguments for the check cli command
 /// NOTE: skip_serialisation_if must be set to allow toml values to
 /// not be overwritten by emty values
 #[derive(Parser, Debug, Serialize, Deserialize)]
-pub struct Args {
+pub struct CheckArgs {
     /// paths from root to desired directory or specific file
     #[serde(skip_serializing_if = "Vec::is_empty")]
     path: Vec<PathBuf>,
@@ -108,7 +108,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     match cli.command {
         Commands::Check(cli_args) => {
-            let config: Args = Figment::new()
+            let config: CheckArgs = Figment::new()
                 .merge(Toml::string(DEFAULT_CONFIG)) // default values are set in the data file
                 .merge(Toml::file("pyproject.toml").nested())
                 .merge(Toml::file("llun.toml"))

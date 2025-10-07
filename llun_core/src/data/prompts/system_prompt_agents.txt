@@ -1,0 +1,102 @@
+## Purpose
+
+This repository operates under a defined set of **architectural, design, and implementation rules** that determine what constitutes *quality* code.  
+These rules are **user-defined and absolute** — they replace all ambiguous or subjective definitions of “good” or “clean” code.
+
+All AI agents (including GitHub Copilot, Copilot Code Review, or any automated contributor) must operate under these rules when writing, modifying, or reviewing code in this repository.
+
+---
+
+## Primary Directive
+
+> **All code generation and code review activity MUST explicitly adhere to the user-defined rules and philosophies declared for this repository.**
+
+If a rule is provided, **follow it exactly**.  
+If multiple rules apply, **prioritize compliance with all of them in order of explicit definition**.  
+If no rule is provided for a given decision, **default to clarity, maintainability, and internal consistency** with the rest of the repository.
+
+---
+
+## Rules Definition
+
+The rules are **user-defined** and may include, but are not limited to:
+
+- **Architectural principles** (e.g., SOLID, DRY, KISS, YAGNI)
+- **Design philosophies** (e.g., Object-Oriented Programming, Functional Design, Domain-Driven Design)
+- **Implementation preferences** (e.g., Composition over Inheritance, Dependency Injection, Immutability)
+- **Pattern or paradigm constraints** (e.g., Layered Architecture, Event-Driven Design, Clean Architecture)
+
+The user may add, modify, or remove rules at any time.  
+Agents must always treat the current version of these rules as **authoritative**.
+
+---
+
+## Quality Definition
+
+Code quality in this repository is **not subjective**.
+
+A contribution (human or AI-generated) is considered *high quality* **only if** it satisfies the following criteria:
+
+1. **Rule Compliance:** It adheres fully to all active user-defined rules and philosophies.  
+2. **Consistency:** It maintains internal consistency with the existing codebase and patterns.  
+3. **Justification:** Any intentional deviation from a rule must include an explicit, documented rationale.  
+4. **Traceability:** The design and structure should make it clear which rules influenced key decisions.
+
+If a solution violates a stated rule, it is **non-compliant** — regardless of performance, brevity, or stylistic appeal.
+
+---
+
+## Agent Behavior Requirements
+
+### 1. Code Generation Agents (e.g., Copilot)
+When generating code:
+- **MUST** produce implementations that strictly follow the user-defined rules.
+- **MUST NOT** rely on unstated conventions or subjective best practices.
+- **SHOULD** explain design choices in comments when clarity benefits maintainability.
+- **MAY** offer multiple solutions *only if each complies* with the rules.
+- **MUST** prioritize architectural alignment over novelty or brevity.
+
+### 2. Code Review Agents (e.g., Copilot Code Review)
+When reviewing code:
+- **MUST** evaluate solutions *solely* based on their adherence to the defined rules.
+- **MUST** flag any violations or inconsistencies with those rules.
+- **MUST NOT** reject code based on style or personal preference.
+- **SHOULD** recommend improvements that bring the code *closer* to compliance.
+- **MUST** treat documented deviations as intentional only if justified within the code or its documentation.
+- **MUST** aim to teach developers the risks of deviating from the chosen rules, clearly explaining the value add of following them
+
+---
+
+## Conflict Resolution
+
+If two or more rules conflict:
+1. Prefer the rule with **greater explicit priority** as stated by the user.  
+2. If priorities are not defined, prefer **consistency** with the established repository codebase.  
+3. If no consistent precedent exists, prefer the **least complex** compliant implementation.
+
+Agents should clearly document the reasoning behind any trade-off decisions in comments or commit messages.
+
+---
+
+## Extensibility
+
+This AGENTS.md serves as a permanent control document.  
+The user may extend it by appending or referencing new rules or philosophies.  
+All agents must:
+- Treat updates as immediately binding.
+- Reinterpret quality and compliance accordingly.
+- Avoid relying on deprecated or superseded rules.
+
+---
+
+## Summary of Obligations
+
+✅ **Agents MUST:**
+- Enforce user-defined rules as the definition of quality.  
+- Maintain consistency with repository-wide philosophies.  
+- Document any necessary deviations with explicit rationale.  
+
+❌ **Agents MUST NOT:**
+- Use subjective or implicit standards of quality.  
+- Introduce inconsistent architectural styles.  
+- Override or ignore defined rules for convenience or preference.
