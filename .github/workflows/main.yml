@@ -47,17 +47,74 @@ jobs:
     - name: Run tests
       run: cargo test
 
-  # CD Job - only runs on releases
-  publish:
+  # CD Job - Build wheels for multiple platforms
+  build-wheels:
     needs: test
+    runs-on: ${{ matrix.os }}
+    if: github.event_name == 'release' && github.event.action == 'published'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+    
+    - name: Install maturin
+      run: pip install maturin
+    
+    - name: Build wheels (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      uses: PyO3/maturin-action@v1
+      with:
+        command: build
+        args: --release --out dist
+        manylinux: auto
+    
+    - name: Build wheels (Windows/macOS)
+      if: matrix.os != 'ubuntu-latest'
+      run: maturin build --release --out dist
+    
+    - name: Upload wheels
+      uses: actions/upload-artifact@v4
+      with:
+        name: wheels-${{ matrix.os }}
+        path: dist
+
+    - name: Build wheels (llun_mcp) (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      uses: PyO3/maturin-action@v1
+      with:
+        command: build
+        args: --release --out dist --manifest-path llun_mcp/Cargo.toml
+        manylinux: auto
+    
+    - name: Build wheels (llun_mcp) (Windows/macOS)
+      if: matrix.os != 'ubuntu-latest'
+      working-directory: llun_mcp
+      run: maturin build --release --out ../dist
+
+    - name: Upload wheels (llun_mcp)
+      uses: actions/upload-artifact@v4
+      with:
+        name: wheels-llun-mcp-${{ matrix.os }}
+        path: dist
+
+  # Publish all wheels to PyPI
+  publish:
+    needs: build-wheels
     runs-on: ubuntu-latest
     if: github.event_name == 'release' && github.event.action == 'published'
     
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Install Rust
-      uses: dtolnay/rust-toolchain@stable
     
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -67,20 +124,14 @@ jobs:
     - name: Install maturin
       run: pip install maturin
     
-    - name: Build wheels
-      run: maturin build --release
+    - name: Download all wheels
+      uses: actions/download-artifact@v4
+      with:
+        path: dist
+        pattern: wheels-*
+        merge-multiple: true
     
     - name: Publish to PyPI
       env:
         MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-      run: maturin publish --skip-existing
-
-    - name: Build wheels (llun_mcp)
-      working-directory: llun_mcp
-      run: maturin build --release
-
-    - name: Publish to PyPI (llun_mcp)
-      working-directory: llun_mcp
-      env:
-        MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-      run: maturin publish --skip-existing
+      run: maturin publish --skip-existing --no-sdist dist/*

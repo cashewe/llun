@@ -34,10 +34,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Quality Assurance",
 ]
-dependencies = [
-    "maturin>=1.9.4",
-    "twine>=6.2.0",
-]
+dependencies = []
 
 [tool.maturin]
 bindings = "bin"
