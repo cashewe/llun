@@ -114,15 +114,13 @@ jobs:
     if: github.event_name == 'release' && github.event.action == 'published'
     
     steps:
-    - uses: actions/checkout@v4
-    
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
     
-    - name: Install maturin
-      run: pip install maturin
+    - name: Install twine
+      run: pip install twine
     
     - name: Download all wheels
       uses: actions/download-artifact@v4
@@ -131,7 +129,11 @@ jobs:
         pattern: wheels-*
         merge-multiple: true
     
+    - name: List wheels
+      run: ls -la dist/
+    
     - name: Publish to PyPI
       env:
-        MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-      run: maturin publish --skip-existing --no-sdist dist/*
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+      run: twine upload --skip-existing dist/*
