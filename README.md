@@ -1,5 +1,7 @@
 # Llun - The Architectural 'Linter'
- 
+
+![piccy](docs/llun_opening.jpg)
+
 ## Intro
 
 Llun ([pronounced '/ɬiːn/'](https://www.howtopronounce.com/welsh/llun), meaning 'picture' (as in **big**)) brings architectural principles directly into your development workflow through a familiar command-line interface. Unlike traditional linters that focus on syntax and style, Llun evaluates your code against configurable architectural rules — ensuring consistency in design patterns, dependency management, and structural decisions across your entire codebase. 
