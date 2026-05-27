@@ -1,6 +1,6 @@
 # Llun - The Architectural 'Linter'
 
-![piccy](docs/llun_opening.jpg)
+![piccy](llun_opening.jpg)
 
 ## Intro
 
